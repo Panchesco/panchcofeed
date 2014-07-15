@@ -27,8 +27,7 @@ class Panchcofeed {
 							$this->client_secret	= $result->client_secret;
 					    	$this->props['hashtag']	= $this->hashtag;
 					    	$this->props['application']	= $this->application;
-					    	
-					    	echo $result->client_id;
+
 					
 					}  else {
 						
@@ -36,9 +35,6 @@ class Panchcofeed {
 					    	$this->props['application']	= '';
 					}
 					
-					
-					
-	    
 	    }
     
     
@@ -49,9 +45,12 @@ class Panchcofeed {
 		// Build out the endpoint url
 		$endpoint = "https://api.instagram.com/v1/tags/".$this->hashtag."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count;
 		
+		
+		/*
 		print_r('<pre>');
 		print_r($endpoint);
 		print_r('</pre>');
+		*/
 		
 								
 
@@ -59,9 +58,11 @@ class Panchcofeed {
 
 		$obj = json_decode($response);
 		
+		/*
 		print_r('<pre>');
 		print_r($obj);
 		print_r('</pre>');
+		*/
 		
 
     	$variables[] = $this->props;
