@@ -7,8 +7,13 @@ class Panchcofeed {
     var 		$application	= '';
     var			$client_id		= '';
     var			$client_secret	= '';
-    var			$props			= array();
+    var			$props			= array('client_id'=>'',
+    									'hashtag'=>'',
+    									'code'=>'',
+    									'error_type'=>'',
+    									'error_message'=>'',);
     var 		$media_count	= 20;
+    var 		$endpoint		= '';
     
     
     function __construct()
@@ -43,26 +48,36 @@ class Panchcofeed {
 		
 		
 		// Build out the endpoint url
-		$endpoint = "https://api.instagram.com/v1/tags/".$this->hashtag."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count;
-		
-		
-		/*
-		print_r('<pre>');
-		print_r($endpoint);
-		print_r('</pre>');
-		*/
-		
-								
+		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->hashtag."/media/recent?client_id=X".$this->client_id.'&count='.$this->media_count;
 
-		$response = $this->get_curl($endpoint);
+		$response = $this->get_curl($this->props['endpoint']);
 
 		$obj = json_decode($response);
+		
+		if(isset($obj->meta))
+		{
+			$this->props['code'] = $obj->meta->code;	
+
+		} 
+		
+		if(isset($obj->meta->error_message))
+		{
+				$this->props['error_type'] = $obj->meta->error_type;
+				$this->props['error_message'] = $obj->meta->error_message;
+		
+				} else {
+				
+				$this->props['error_type'] = '';
+				$this->props['error_message'] = '';			
+			
+		}
 		
 		/*
 		print_r('<pre>');
 		print_r($obj);
 		print_r('</pre>');
 		*/
+		
 		
 
     	$variables[] = $this->props;
