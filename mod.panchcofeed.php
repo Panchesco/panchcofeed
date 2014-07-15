@@ -48,7 +48,7 @@ class Panchcofeed {
 		
 		
 		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->hashtag."/media/recent?client_id=X".$this->client_id.'&count='.$this->media_count;
+		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->hashtag."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count;
 
 		$response = $this->get_curl($this->props['endpoint']);
 
@@ -56,27 +56,26 @@ class Panchcofeed {
 		
 		if(isset($obj->meta))
 		{
-			$this->props['code'] = $obj->meta->code;	
-
-		} 
 		
-		if(isset($obj->meta->error_message))
-		{
+			$this->props['metacode'] = $obj->meta->code;
+			
+			if(isset($obj->meta->error_type))
+			{
+				
 				$this->props['error_type'] = $obj->meta->error_type;
 				$this->props['error_message'] = $obj->meta->error_message;
+			}		
 		
-				} else {
-				
-				$this->props['error_type'] = '';
-				$this->props['error_message'] = '';			
-			
 		}
 		
+		
 		/*
+		
 		print_r('<pre>');
 		print_r($obj);
 		print_r('</pre>');
 		*/
+		
 		
 		
 
