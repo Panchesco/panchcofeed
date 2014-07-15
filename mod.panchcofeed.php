@@ -7,11 +7,7 @@ class Panchcofeed {
     var 		$application	= '';
     var			$client_id		= '';
     var			$client_secret	= '';
-    var			$props			= array('client_id'=>'',
-    									'hashtag'=>'',
-    									'code'=>'',
-    									'error_type'=>'',
-    									'error_message'=>'',);
+    var			$props			= array();
     var 		$media_count	= 1;
     var 		$endpoint		= '';
     var 		$tag_delimiter	= ',';
