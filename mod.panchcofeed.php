@@ -29,23 +29,12 @@ class Panchcofeed {
 	     */
 	     public function set_application()
 	     {
-	     
-	    
-		     	    if(ee()->TMPL->fetch_param('application'))
-		     	    {
-			     	    
-			     	    $this->application = ee()->TMPL->fetch_param('application');
-			     	    
-		     	    } else {
-		     	    
-			     	    return FALSE;
-		     	    
-		     	    }
 
-		     	    
+		     	    $this->get_parameters();
+
 		     	    // Get IG applcation settings from db.
 			 		$row	= ee()->db
-	    			->where('application',$this->application)
+	    			->where('application',$this->props['application'])
 	    			->get('panchcofeed_applications')
 	    			->row();
 	    
@@ -56,7 +45,7 @@ class Panchcofeed {
 							$this->client_secret	= $row->client_secret;
 							$this->access_token		= $row->access_token;
 							$this->ig_user			= @unserialize($row->ig_user);
-					    	$this->props['application']	= $this->application;
+					    	//$this->props['application']	= $this->application;
 					
 					}  else {
 						
@@ -64,6 +53,41 @@ class Panchcofeed {
 					}	
 					
 	     }
+	     
+	     
+	     
+	     
+	/**
+	 * Fetch parameter being passed from the current template.  
+	 */
+	 public function get_parameters()
+	 {
+	 
+	 	// Fetch the application parameter.
+	 	if(ee()->TMPL->fetch_param('application'))
+		{
+			$this->props['application'] = ee()->TMPL->fetch_param('application');;
+		}
+	 
+	 	// Fetch the hasthag parameter from tthe template.
+	    if(ee()->TMPL->fetch_param('hashtag'))
+	    {
+	    	$this->props['hashtag'] = ee()->TMPL->fetch_param('hashtag');
+	    }
+	    
+	    // How many items? Fetch the media_count property.
+	    if(ee()->TMPL->fetch_param('media_count'))
+	    {
+	    	$this->media_count = ee()->TMPL->fetch_param('media_count');
+	    }
+	    
+	    // Fetch the tag_delimiter property.
+	    if(ee()->TMPL->fetch_param('tag_delimiter'))
+	    {
+	    	$this->tag_delimiter = ee()->TMPL->fetch_param('tag_delimiter');
+	    }
+		 
+	 }
 	    
 	    
 	/**
@@ -266,26 +290,10 @@ class Panchcofeed {
     	// Query db and set the application properties.
     	$this->set_application();
 	   
-	    // Fetch the hasthag parameter from tthe template.
-	    if(ee()->TMPL->fetch_param('hashtag'))
-	    {
-	    	$this->hashtag = ee()->TMPL->fetch_param('hashtag');
-	    }
-	    
-	    // How many items? Fetch the media_count property.
-	    if(ee()->TMPL->fetch_param('media_count'))
-	    {
-	    	$this->media_count = ee()->TMPL->fetch_param('media_count');
-	    }
-	    
-	    // Fetch the tag_delimiter property.
-	    if(ee()->TMPL->fetch_param('tag_delimiter'))
-	    {
-	    	$this->tag_delimiter = ee()->TMPL->fetch_param('tag_delimiter');
-	    }
+
 		
 		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->hashtag."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count;
+		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->props['hashtag']."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count;
 
 		//$response = $this->get_curl($this->props['endpoint']);
 		$response	= CurlHelper::getCurl($this->props['endpoint']);
@@ -338,23 +346,7 @@ class Panchcofeed {
     	// Query db and set the application properties.
     	$this->set_application();
 	   
-	    // Fetch the hasthag parameter from tthe template.
-	    if(ee()->TMPL->fetch_param('username'))
-	    {
-	    	$this->hashtag = ee()->TMPL->fetch_param('hashtag');
-	    }
-	    
-	    // How many items? Fetch the media_count property.
-	    if(ee()->TMPL->fetch_param('media_count'))
-	    {
-	    	$this->media_count = ee()->TMPL->fetch_param('media_count');
-	    }
-	    
-	    // Fetch the tag_delimiter property.
-	    if(ee()->TMPL->fetch_param('tag_delimiter'))
-	    {
-	    	$this->tag_delimiter = ee()->TMPL->fetch_param('tag_delimiter');
-	    }
+
 		
 		// Build out the endpoint url
 		$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/feed?access_token=" . $this->access_token . "&count=".$this->media_count;
@@ -407,26 +399,11 @@ class Panchcofeed {
 	 function media_user()
     {
     
-    
-    
     	// Query db and set the application properties.
     	$this->set_application();
     	
     	// Set the authenticated user data to props.
     	$this->add_ig_user_array($this->ig_user);
-	   
-	    
-	    // How many items? Fetch the media_count property.
-	    if(ee()->TMPL->fetch_param('media_count'))
-	    {
-	    	$this->media_count = ee()->TMPL->fetch_param('media_count');
-	    }
-	    
-	    // Fetch the tag_delimiter property.
-	    if(ee()->TMPL->fetch_param('tag_delimiter'))
-	    {
-	    	$this->tag_delimiter = ee()->TMPL->fetch_param('tag_delimiter');
-	    }
 		
 		// Build out the endpoint url
 		$this->props['endpoint'] = "https://api.instagram.com/v1/users/" . $this->ig_user->id . "/media/recent/?client_id=" . $this->client_id . "&count=".$this->media_count;
