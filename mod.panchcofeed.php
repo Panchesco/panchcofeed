@@ -33,10 +33,22 @@ class Panchcofeed {
 		     	    $this->get_parameters();
 
 		     	    // Get IG applcation settings from db.
-			 		$row	= ee()->db
-	    			->where('application',$this->props['application'])
-	    			->get('panchcofeed_applications')
-	    			->row();
+		     	    
+		     	    if(isset($this->props['application']))
+		     	    {
+				 		$row	= ee()->db
+		    			->where('application',$this->props['application'])
+		    			->get('panchcofeed_applications')
+		    			->row();
+	    				
+	    				} else {
+		    			
+		    			$row	= ee()->db
+		    			->order_by('app_id','DESC')
+		    			->get('panchcofeed_applications')
+		    			->row();
+		    			
+	    			}
 	    
 					if($row)
 					{
@@ -45,13 +57,8 @@ class Panchcofeed {
 							$this->client_secret	= $row->client_secret;
 							$this->access_token		= $row->access_token;
 							$this->ig_user			= @unserialize($row->ig_user);
-					    	//$this->props['application']	= $this->application;
-					
-					}  else {
-						
-					    	$this->props['application']	= '';
-					}	
-					
+							$this->props['application']	= $row->application;
+					}  					
 	     }
 	     
 	     
