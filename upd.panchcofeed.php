@@ -24,24 +24,25 @@
 			
 			$data = array(
 				'class' => 'Panchcofeed',
-				'method' => 'create_modify',
+				'method' => 'ig_auth',
 			);
 			
 			ee()->db->insert('actions', $data);
-			
+
 			
 			// Module Data.
 			$fields = array(
 				'app_id'		=> array('type' => 'int', 'constraint' => '10', 'unsigned' => TRUE, 'auto_increment' => TRUE ),
 				'application'	=> array('type' => 'varchar','constraint' => '72'),
-				'username'		=> array('type' => 'varchar', 'constraint' => '40'),
 				'client_id'		=> array('type' => 'varchar', 'constraint' => '40'),
 				'client_secret'	=> array('type' => 'varchar', 'constraint' => '40'),
-				'website_url'	=> array('type' => 'varchar', 'constraint' => '250'),
-				'redirect_uri'	=> array('type' => 'varchar', 'constraint' => '250'),
-				'access_token'	=> array('type' => 'varchar', 'constraint' => '250'),
-				'hashtag'		=> array('type' => 'varchar', 'constraint' => '72'),
-				'media_count'	=> array('type'=>'int', 'constraint' => '2', 'default' => '20')
+				'website_url'	=> array('type' => 'varchar', 'constraint' => '256'),
+				'redirect_uri'	=> array('type' => 'varchar', 'constraint' => '256'),
+				'grant_type'	=> array('type' => 'varchar', 'constraint' => '40','default' => 'authorization_code'),
+				'redirect_uri'	=> array('type'	=> 'varchar', 'constraint' => '256'),
+				'access_token'	=> array('type' => 'varchar', 'constraint' => '256'),
+				'ig_user'		=> array('type' => 'text')	
+				
 			);
 			
 			
@@ -110,7 +111,6 @@
 		
 
 		
-	}// END CLASS
-
-/* End of file upd.comment.php */
-/* Location: ./system/expressionengine/modules/panchco_tagfeed/upd.panchco_tagfeed.php */
+	}
+	/* End of file upd.panchcofeed.php */
+	/* Location: ./system/expressionengine/third_party/panchcofeed/upd_panchcofeed.php */

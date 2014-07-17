@@ -15,7 +15,6 @@
 			
 			ee()->load->model('applications_model','applications');
 			ee()->view->cp_page_title = lang('panchcofeed_module_name');
-			
 		}
 		
 		
@@ -25,7 +24,7 @@
 			    ee()->load->library('javascript');
 				ee()->load->library('table');
 				ee()->load->helper('form');
-				
+
 				
 				$vars['action_url'] = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed'.AMP.'';
 				$vars['form_hidden'] = NULL;
@@ -33,7 +32,15 @@
 				
 			$vars['options'] = array(
 				    'edit'  => lang('edit_selected'),
-				);		
+				);	
+				
+				
+				if( empty($vars['apps']))
+				{
+										
+					} else {
+					
+				}	
 		
 				return ee()->load->view('index', $vars, TRUE);
 		
@@ -44,7 +51,7 @@
 		{
 				ee()->load->library('form_validation');
 				
-				$vars = array('application'=>'','username'=>'','client_id'=>'','client_secret'=>''); 
+				$vars = array('application'=>'','username'=>'','client_id'=>'','client_secret'=>'','app_id'=>NULL,'redirect_uri'=>$this->redirect_uri()); 
 
 				if(ee()->input->post('submit'))
 				{
@@ -87,6 +94,7 @@
 				ee()->load->library('form_validation');
 				
 				$vars = ee()->applications->fetch();
+				$vars['redirect_uri'] = $this->redirect_uri();
 
 				if(ee()->input->post('submit'))
 				{
@@ -115,11 +123,35 @@
 				$vars['method']	= 'modify';
 				
 				return ee()->load->view('create_modify', $vars, TRUE);
-			
 		}
 		
 		
 		
+		/**
+		 * Query the actions table and create a redirect_uri value for user to give to Instagram.
+		 * @return string
+		 */
+		 private function redirect_uri()
+		 {
+			 
+			 
+			 
+			 $row = ee()->db->select('action_id')
+			 			->where('class','Panchcofeed')
+			 			->where('method','ig_auth')
+			 			->get('actions')
+			 			->row();
+			 			
+			 return site_url() . '?ACT=' . $row->action_id;
+			 
+		 }
+		
+		
+		
+			
+		}
+		/* End of file mcp.panchcofeed.php */
+		/* Location: ./system/expressionengine/third_party/panchcofeed/mcp.panchcofeed.php */
 		
 		
 		
@@ -142,4 +174,6 @@
 		
 		
 		
-	}
+		
+		
+	

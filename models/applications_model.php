@@ -56,11 +56,25 @@ class Applications_model extends CI_Model {
 	 */
 	function create()
 	{
-		$data['application']	= ee()->input->post('application',TRUE);
-		$data['client_id']		= ee()->input->post('client_id',TRUE);
-		$data['client_secret']	= ee()->input->post('client_secret',TRUE);
+		$data['application']	= trim(ee()->input->post('application',TRUE));
+		$data['client_id']		= trim(ee()->input->post('client_id',TRUE));
+		$data['client_secret']	= trim(ee()->input->post('client_secret',TRUE));
+		$data['redirect_uri']	= trim(ee()->input->post('redirect_uri',TRUE));
+		$data['website_url']	= trim(ee()->input->post('website_url',TRUE));
+		$data['ig_user']			= serialize(new stdClass());
+		
+		
 
-		return $this->db->insert($this->table,$data);
+		if($this->db->insert($this->table,$data)){
+			
+			$this->app_id = $this->db->insert_id();
+			
+			return $this->app_id;
+			
+			} else {
+			
+			return FALSE;
+		};
 	}
 	
 // ------------------------------------------------------------------------
@@ -92,10 +106,13 @@ class Applications_model extends CI_Model {
 	 */
 	function modify()
 	{
-		$this->app_id			= ee()->input->post('app_id',TRUE);
-		$data['application']	= ee()->input->post('application',TRUE);
-		$data['client_id']		= ee()->input->post('client_id',TRUE);
-		$data['client_secret']	= ee()->input->post('client_secret',TRUE);
+		$this->app_id	= ee()->input->post('app_id',TRUE);
+		
+		$data['application']	= trim(ee()->input->post('application',TRUE));
+		$data['client_id']		= trim(ee()->input->post('client_id',TRUE));
+		$data['client_secret']	= trim(ee()->input->post('client_secret',TRUE));
+		$data['redirect_uri']	= trim(ee()->input->post('redirect_uri',TRUE));
+		$data['website_url']	= trim(ee()->input->post('website_url',TRUE));
 	
 		return $this->db
 					->where('app_id',$this->app_id)
@@ -105,7 +122,5 @@ class Applications_model extends CI_Model {
 	
 	
 	}
-	// END CLASS
-
-/* End of file Applications_model.php */
-/* Location: ./system/expressionengine/third_party/panchcofeed/models/applications_model.php */
+	/* End of file applications_model.php */
+	/* Location: ./system/expressionengine/third_party/panchcofeed/models/applications_model.php */

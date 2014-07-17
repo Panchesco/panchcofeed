@@ -26,7 +26,10 @@ $lang = array(
 
 'add_application_instructions' => 
 '',
-
+'yes' => 
+'Yes',
+'no' => 
+'No',
 'application' =>
 'Application',
 'username' =>
@@ -37,14 +40,35 @@ $lang = array(
 'Client ID',
 'client_secret' =>
 'Client Secret',
+'website_url' =>
+'Website URL',
+'redirect_uri' =>
+'Redirect URI',
 'create_success' => 
 'The application was added.',
 'create_failure' => 
 'There was a problem and the application was not added.',
 'modify_success' => 
 'The application information was updated.',
+'ig_auth_prompt' =>
+'Would you like to auhorize this module with Instagram?',
+'ig_deauth_prompt' =>
+'Would you like to de-auhorize this module with Instagram?',
+'authorize'=>
+'Authorize',
+'deauthorize' =>
+'Deauthorize',
+'auth_fail' => 
+'There was a problem and the application was not authorized.',
+'auth_success' =>
+'The app was authorized',
+'close_window' => 
+'Close this window ',
 
 //
 ''=>''
 );
+
+/* End of file panchcofeed_lang.php */
+/* Location: ./system/expressionengine/third_party/panchcofeed/language/eng/panchcofeed_lang.php */
 

@@ -1,6 +1,7 @@
+
 <?php if(count($apps)==0) { ?>
 
-<p><a href="<?php echo BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed'.AMP.'method=create'; ?>">Add your first app</a></p>
+<p><a href="<?php echo BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed'.AMP.'method=create'; ?>">Add your app</a></p>
 
 <?php } else { ?>
 
