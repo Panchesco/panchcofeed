@@ -97,8 +97,6 @@ class Applications_model extends CI_Model {
 	}
 	
 	/**
-	 * Modify application row
-	 *
 	 * Modify an exisiting panchcofeed_applications row.
 	 *
 	 * @access public
@@ -120,7 +118,57 @@ class Applications_model extends CI_Model {
 					->update($this->table,$data);
 	}
 	
-	
+			 
+		 /**
+		  * Use access_access token to determine if authentication is current.
+		  * @param $app_id integer
+		  * @return boolean.
+		  */
+		  function access_token_valid()
+		  {
+		  
+		  		$app_id	= ee()->input->get('app_id',TRUE);
+		  		
+		  		// Get the db row for the current application.
+		  		$row = $this->db
+		  				->where('app_id',$app_id)
+		  				->get('panchcofeed_applications')
+		  				->row();	
+		  				
+		  		if($row)
+		  		{
+		  			// Now we need to make a call to IG with the access_token. Do we have one?
+		  			if( $row->access_token != '')
+		  			{
+			  			
+			  			// Good. Call Instagram.
+			  			$url = "https://api.instagram.com/v1/users/self/feed?access_token=" . $row->access_token . "&count=1";
+			  			
+			  			$response = CurlHelper::getCurl($url);
+			  			
+			  			// Did they answer? What did they say?
+			  			if($response)
+			  			{
+				  			$obj = json_decode($response);
+				  			
+				  			// This call to the API should have a meta code of 200.
+				  			if(isset($obj->meta->code))
+				  			{
+					  			if($obj->meta->code == 200)
+					  			{
+						  			// Yay!
+						  			return TRUE;
+					  			}
+				  			}
+				  			
+			  			} 			  			
+		  			} 
+
+		  		} 
+		  		
+		  		return FALSE;
+		  }
+
 	}
 	/* End of file applications_model.php */
 	/* Location: ./system/expressionengine/third_party/panchcofeed/models/applications_model.php */

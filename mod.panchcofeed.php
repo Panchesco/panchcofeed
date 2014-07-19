@@ -17,9 +17,10 @@ class Panchcofeed {
     {
 
 		ee()->lang->loadfile('panchcofeed');
+		ee()->load->helper('panchco_curl');
 		
 		// Load cURL helper.
-	        require_once(dirname(__FILE__) . '/helpers/curlhelper.php');
+	        //require_once(dirname(__FILE__) . '/helpers/curlhelper.php');
 		
 	    }
 	    

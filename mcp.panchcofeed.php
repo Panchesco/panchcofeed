@@ -13,8 +13,12 @@
             .AMP.'module=panchcofeed'.AMP.'method=create'
 			));
 			
+			ee()->load->helper('panchco_curl');
 			ee()->load->model('applications_model','applications');
 			ee()->view->cp_page_title = lang('panchcofeed_module_name');
+			
+
+			
 		}
 		
 		
@@ -91,10 +95,18 @@
 		{
 				ee()->applications->app_id	= ee()->input->get("app_id",TRUE);
 				
+				
+				
+				
+				
+				
+				
 				ee()->load->library('form_validation');
 				
 				$vars = ee()->applications->fetch();
 				$vars['redirect_uri'] = $this->redirect_uri();
+				
+				$vars['authenticated'] = ee()->applications->access_token_valid();
 
 				if(ee()->input->post('submit'))
 				{
@@ -145,6 +157,8 @@
 			 return site_url() . '?ACT=' . $row->action_id;
 			 
 		 }
+		 
+
 		
 		
 		

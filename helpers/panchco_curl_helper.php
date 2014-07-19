@@ -1,8 +1,6 @@
 <?php
 /**
  * CurlHelper
- *
- * @package		InstaApi
  * @author		Richard Whitmer
  */
 

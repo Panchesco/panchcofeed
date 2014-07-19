@@ -64,6 +64,10 @@ $lang = array(
 'The app was authorized',
 'close_window' => 
 'Close this window ',
+'ig_auth_current' => 
+'Authorization for this account is current. Visit your Instagram account to',
+'ig_manage_apps' =>
+'manage Instagram applications',
 
 //
 ''=>''
