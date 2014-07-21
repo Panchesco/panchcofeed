@@ -218,11 +218,6 @@
 			  ee()->session->set_flashdata('message_success', lang('action_cancelled'));
 			  ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
 		   }
-		 
-
-		
-		
-		
 			
 		}
 		/* End of file mcp.panchcofeed.php */

@@ -170,7 +170,6 @@ class Applications_model extends CI_Model {
 		  		
 		  		return FALSE;
 		  }
-
 	}
 	/* End of file applications_model.php */
 	/* Location: ./system/expressionengine/third_party/panchcofeed/models/applications_model.php */

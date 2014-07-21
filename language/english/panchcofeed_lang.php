@@ -82,8 +82,6 @@ $lang = array(
 'No applications were selected',
 'add_first_app' =>
 'Add your first application',
-
-
 //
 ''=>''
 );
