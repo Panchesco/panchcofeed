@@ -158,6 +158,67 @@
 			 
 		 }
 		 
+		 /** 
+		  * Present delete_confirm page.
+		  */
+		  public function delete_confirm()
+		  {
+		  
+		  
+		  
+			  
+			  $vars['damned']	= (ee()->input->post('toggle',TRUE)) ? ee()->input->post('toggle',TRUE) : array();
+			  
+			  
+			  if(count($vars['damned'])==0)
+			  {
+			  
+			  	ee()->session->set_flashdata('message_failure', lang('nothing_selected'));
+			  	ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
+			  
+				  
+			  } else {
+			  
+			  		$vars['apps'] = ee()->db
+			  			->where_in('app_id',$vars['damned'])
+			  			->order_by('application','ASC')
+			  			->get('panchcofeed_applications')
+			  			->result();
+			  			
+			  		
+			  			
+			  
+				  return ee()->load->view('delete_confirm',$vars,TRUE);
+			  }
+		  }
+		 
+		 
+		 /** 
+		  * Handle request to delete applications.
+		  */
+		  public function delete()
+		  {
+			  foreach(ee()->input->post('delete',TRUE) as $app_id)
+			  {
+				  ee()->db
+				  	->where('app_id',$app_id)
+				  	->delete('panchcofeed_applications');
+			  }
+			  
+			  ee()->session->set_flashdata('message_success', lang('delete_success'));
+			  ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
+			  
+		  }
+		  
+		  /**
+		   * Cancel an action and redirect to the landing page for this module.
+		   */
+		   public function cancel()
+		   {
+			  ee()->session->set_flashdata('message_success', lang('action_cancelled'));
+			  ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
+		   }
+		 
 
 		
 		

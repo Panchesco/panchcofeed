@@ -46,10 +46,20 @@ $lang = array(
 'Redirect URI',
 'create_success' => 
 'The application was added.',
+'delete_success' =>
+'Deleted',
+'action_cancelled' =>
+'Action cancelled',
 'create_failure' => 
 'There was a problem and the application was not added.',
 'modify_success' => 
 'The application information was updated.',
+'delete_question' =>
+'Are you sure you want to delete the following files:',
+'action_can_not_be_undone' => 
+'This action cannot be undone.',
+'cancel' =>
+'Cancel',
 'ig_auth_prompt' =>
 'Would you like to auhorize this module with Instagram?',
 'ig_deauth_prompt' =>
@@ -68,6 +78,11 @@ $lang = array(
 'Authorization for this account is current. Visit your Instagram account to',
 'ig_manage_apps' =>
 'manage Instagram applications',
+'nothing_selected' =>
+'No applications were selected',
+'add_first_app' =>
+'Add your first application',
+
 
 //
 ''=>''

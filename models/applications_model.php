@@ -38,7 +38,9 @@ class Applications_model extends CI_Model {
 	function fetch_all()
 	{
 		$this->db->select('*');
-        $query = $this->db->get('panchcofeed_applications');
+        $query = $this->db
+        	->order_by('application','ASC')
+			->get('panchcofeed_applications');
 
 		return $query->result('site_pages');
 	}

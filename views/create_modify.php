@@ -1,3 +1,4 @@
+
 <p><?php echo lang('create_modify_copy');?></p>
 
 <?php echo form_open('C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed'.AMP.'method='. $method . AMP.'app_id='.$app_id, '')?>
@@ -47,7 +48,6 @@
 			<td colspan="2">
 			<?php if(false === $authenticated) { ?>
 			<p><?php echo lang('ig_auth_prompt');?>:</p>
-			<p><a id="ig-authorize" class="btn submit" href="javascript:void(0);"><?php echo lang('authorize') ;?></a></p>
 			<?php } else { ?>	
 			<p><?php echo lang('ig_auth_current');?> <a href="https://instagram.com/accounts/manage_access" target="_blank"><?php echo lang('ig_manage_apps');?></a><p>
 			<?php } ?>
@@ -55,6 +55,9 @@
 		</tr>	
 	</tbody>
 </table>
+<?php if(false === $authenticated) { ?>
+<p><a id="ig-authorize" class="btn submit" href="javascript:void(0);"><?php echo lang('authorize') ;?></a></p>
+<?php } ?>			
 <script>
 	(function($){
 		$(document).ready(function(){
