@@ -14,6 +14,8 @@ class Panchcofeed {
     var 		$next_url		= '';
     var 		$page_id		= NULL;
     var 		$next_page		= NULL;
+    var 		$ig_user			= NULL;
+    var 		$ig_username		= NULL;
     
     
     function __construct()
@@ -100,6 +102,12 @@ class Panchcofeed {
 	    {
 	    	$this->page_id = ee()->TMPL->fetch_param('page_id');
 	    }
+	    
+		// Fetch the ig_username property.
+	    if(ee()->TMPL->fetch_param('ig_username'))
+	    {
+	    	$this->ig_username = ee()->TMPL->fetch_param('ig_username');
+	    }
 		 
 	 }
 	    
@@ -146,8 +154,7 @@ class Panchcofeed {
 			
 			$this->props['media'][] = array();
 		}
-		
-		
+
     	$variables[] = $this->props;
     
     	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
@@ -209,9 +216,9 @@ class Panchcofeed {
     
 	
 	/**
-	 * Get media added by authenticated user.
+	 * Get Instagram media for the authenticated user.
 	 */
-	 function media_user()
+	 function media_self()
     {
     
     	// Query db and set the application properties.
@@ -346,7 +353,7 @@ class Panchcofeed {
          }
          
          
-         	/**
+    /**
 	 * Add pagination object properties to this->props
 	 * @param $pagination IG Pagination object from response.
 	 * @return boolean.
@@ -542,7 +549,69 @@ class Panchcofeed {
 	 
 	 	return $this->props['ig_user'][] = (array) $ig_user;
 
-	 }    
+	 }   
+	 
+	 
+	 
+	 /**
+	  * Instagram user object.
+	  */
+	  public function ig_user()
+	 {
+		$this->set_application();
+		$this->props['ig_username'] = $this->ig_username;
+		$obj = $this->user_find($this->ig_username);
+		
+		$this->props['ig_username'] = $obj->username;
+		$this->props['ig_bio'] = $obj->bio;
+		$this->props['ig_website'] = $obj->website;
+		$this->props['ig_profile_picture'] = $obj->profile_picture;
+		$this->props['ig_full_name'] = $obj->full_name;
+		$this->props['ig_id'] = $obj->id;	
+		$this->props['user_found'] = $obj->user_found;
+		
+		$variables[] = $this->props;
+    
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+	 }
+	 
+	 
+	 
+	 /**
+	  * Find Instagram user by username.
+	  * $param $ig_username string
+	  * @return $object
+	  */
+	  private function user_find($ig_username)
+	  { 
+		  
+		  $endpoint = "https://api.instagram.com/v1/users/search?q=" . $ig_username . "&access_token=" . $this->access_token ."&count=1";
+		  
+		  $response = json_decode(CurlHelper::getCurl($endpoint));
+		  
+		  if(isset($response->meta->code) && $response->meta->code == 200 && isset($response->data[0]))
+		  {
+			  
+				$response->data[0]->user_found = TRUE;
+		  
+		  
+				} else {
+			 
+				  
+				  $response = new stdClass();
+				  $response->data[0]->user_found = FALSE;
+				  $response->data[0]->username = NULL;
+				  $response->data[0]->bio = NULL;
+				  $response->data[0]->website = NULL;
+				  $response->data[0]->profile_picture = NULL;
+				  $response->data[0]->full_name = NULL;
+				  $response->data[0]->id = NULL;
+		  }
+		  
+		  
+		  
+		  return $response->data[0];; 
+	  } 
 
          
         
