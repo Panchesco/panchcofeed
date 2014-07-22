@@ -590,6 +590,7 @@ class Panchcofeed {
 				 						'video_standard_resolution_width' => $vids->standard_resolution_width,
 				 						'video_standard_resolution_height' => $vids->standard_resolution_height,
 				 						'media_tags' => implode($this->tag_delimiter,$row->tags),
+				 						'caption' => (isset($row->caption->text)) ? $row->caption->text : '',
 				 			);
 	
 			 }
