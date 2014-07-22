@@ -75,13 +75,13 @@ $lang = array(
 'close_window' => 
 'Close this window ',
 'ig_auth_current' => 
-'Authorization for this account is current. Visit your Instagram account to',
+'Authorization for this account is current.',
 'ig_manage_apps' =>
 'manage Instagram applications',
 'nothing_selected' =>
 'No applications were selected',
-'add_first_app' =>
-'Add your first application',
+'add_app' =>
+'Add your application',
 //
 ''=>''
 );

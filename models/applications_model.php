@@ -128,7 +128,6 @@ class Applications_model extends CI_Model {
 		  */
 		  function access_token_valid()
 		  {
-		  
 		  		$app_id	= ee()->input->get('app_id',TRUE);
 		  		
 		  		// Get the db row for the current application.
@@ -170,6 +169,33 @@ class Applications_model extends CI_Model {
 		  		
 		  		return FALSE;
 		  }
+		  
+		  /**
+		   * Return the url for the ajax_confirm_auth action.
+		   * @return string
+		   */
+		   function auth_confirm_url()
+		   {
+		   
+		   		$data['class'] = 'Panchcofeed';
+		   		$data['method']	= 'ajax_confirm_auth';
+		   		
+		   		$row = $this->db
+			   			->where($data)
+			   			->get('actions')
+			   			->row();
+
+			   	if($row)
+			   	{
+				   	return site_url('?ACT='.$row->action_id.'&app_id=');
+				   	
+				   	} else {
+				   	
+				   	return NULL;
+			   	}
+		   }
+		  
+		  
 	}
 	/* End of file applications_model.php */
 	/* Location: ./system/expressionengine/third_party/panchcofeed/models/applications_model.php */

@@ -8,10 +8,10 @@
 		
 		function __construct()
 		{
-			ee()->cp->set_right_nav(array(
+			/*ee()->cp->set_right_nav(array(
         'add_application'  => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'
             .AMP.'module=panchcofeed'.AMP.'method=create'
-			));
+			));*/
 			
 			ee()->load->helper('panchco_curl');
 			ee()->load->model('applications_model','applications');
@@ -28,13 +28,22 @@
 			    ee()->load->library('javascript');
 				ee()->load->library('table');
 				ee()->load->helper('form');
+				
+				$vars['auth_confirm_url'] = ee()->applications->auth_confirm_url();
 
 				
 				$vars['action_url'] = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed'.AMP.'';
 				$vars['form_hidden'] = NULL;
 				$vars['apps'] = ee()->applications->fetch_all();
-				
-			$vars['options'] = array(
+
+				$app_data = array();
+				foreach($vars['apps'] as $app)
+				{
+					$app_id = $app['app_id'];
+					$app_data[$app_id] = (object) $app;
+				}
+
+				$vars['options'] = array(
 				    'edit'  => lang('edit_selected'),
 				);	
 				
@@ -47,9 +56,8 @@
 				}	
 		
 				return ee()->load->view('index', $vars, TRUE);
-		
-		
 		}
+		
 		
 		function create()
 		{
@@ -94,12 +102,6 @@
 		function modify()
 		{
 				ee()->applications->app_id	= ee()->input->get("app_id",TRUE);
-				
-				
-				
-				
-				
-				
 				
 				ee()->load->library('form_validation');
 				
@@ -146,8 +148,6 @@
 		 private function redirect_uri()
 		 {
 			 
-			 
-			 
 			 $row = ee()->db->select('action_id')
 			 			->where('class','Panchcofeed')
 			 			->where('method','ig_auth')
@@ -164,9 +164,6 @@
 		  public function delete_confirm()
 		  {
 		  
-		  
-		  
-			  
 			  $vars['damned']	= (ee()->input->post('toggle',TRUE)) ? ee()->input->post('toggle',TRUE) : array();
 			  
 			  
@@ -184,10 +181,7 @@
 			  			->order_by('application','ASC')
 			  			->get('panchcofeed_applications')
 			  			->result();
-			  			
-			  		
-			  			
-			  
+
 				  return ee()->load->view('delete_confirm',$vars,TRUE);
 			  }
 		  }
@@ -218,6 +212,7 @@
 			  ee()->session->set_flashdata('message_success', lang('action_cancelled'));
 			  ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
 		   }
+
 			
 		}
 		/* End of file mcp.panchcofeed.php */

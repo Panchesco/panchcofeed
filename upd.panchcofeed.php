@@ -22,9 +22,19 @@
 			ee()->db->insert('modules',$data);
 			
 			
+			// Instagram Authentication Action
 			$data = array(
 				'class' => 'Panchcofeed',
 				'method' => 'ig_auth',
+			);
+			
+			ee()->db->insert('actions', $data);
+			
+			
+			// AJAX confirm authentication action.
+			$data = array(
+				'class' => 'Panchcofeed',
+				'method' => 'ajax_confirm_auth',
 			);
 			
 			ee()->db->insert('actions', $data);

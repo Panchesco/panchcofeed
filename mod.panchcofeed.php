@@ -19,9 +19,6 @@ class Panchcofeed {
 		ee()->lang->loadfile('panchcofeed');
 		ee()->load->helper('panchco_curl');
 		
-		// Load cURL helper.
-	        //require_once(dirname(__FILE__) . '/helpers/curlhelper.php');
-		
 	    }
 	    
 	    
@@ -473,8 +470,9 @@ class Panchcofeed {
 			 	$row	= ee()->db
 							->get('panchcofeed_applications')
 							->row();
+							
+							
 
-	        	
 	        	$url						= 'https://api.instagram.com/oauth/access_token';
 	        	$fields['client_id'] 		= $row->client_id;
 	        	$fields['client_secret']	= $row->client_secret;
@@ -488,7 +486,7 @@ class Panchcofeed {
 	        	if( $response )
 	        	{
 		        	
-		        	if($response->access_token) 
+		        	if(isset($response->access_token)) 
 		        	{
 			        	// Success, save the access token.
 			        	
@@ -508,18 +506,38 @@ class Panchcofeed {
 		        	}
 		        	
 		        	$vars['close_window'] = lang('close_window');
-		        	ee()->load->view('auth_response',$vars);
+		        	return ee()->load->view('auth_response',$vars);
 		        	
 	        	}
-	        	
-	        	
-	        } else {
-		        
-		        echo '...';
-	        }
-
-	        
+	        } 
         }
+        
+        /**
+         * Confirm authentication for an application.
+         */
+         public function ajax_confirm_auth()
+         {
+         
+         	ee()->load->model('applications_model','applications');
+         	
+         	 $vars['authenticated']	= FALSE;
+	         $vars['authorize']	= lang('authorize');
+	         $vars['app_id'] = ee()->input->get('app_id',TRUE);
+	         $vars['client_id']	= ee()->input->post('client_id',TRUE);
+	         
+				if(ee()->applications->access_token_valid())
+				{
+					$vars['authenticated']	= TRUE;
+				} 	
+     
+	         	return ee()->load->view("ajax_auth_row",$vars);
+	         
+	         die();
+         }
+         
+        
+        
+        
     
 }
 /* End of file mod.panchcofeed.php */

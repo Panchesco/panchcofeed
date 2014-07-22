@@ -33,8 +33,7 @@
 <?php } ?>
 <p><input class="submit" type="submit" name="submit" value="Save" /></p>
 <?php echo form_close();?>
-
-<?php if($method=="modify") {?>
+<?php if($method=="modify" AND 1==0) {?>
 <table class="mainTable solo" cellpadding="0" cellspacing="0" border="0">
 	<thead>
 		<tr>
@@ -59,15 +58,19 @@
 <p><a id="ig-authorize" class="btn submit" href="javascript:void(0);"><?php echo lang('authorize') ;?></a></p>
 <?php } ?>			
 <script>
+/*
 	(function($){
 		$(document).ready(function(){
-			$('#ig-authorize').on('click',function(){
-				window.open("https://api.instagram.com/oauth/authorize/?client_id=<?php echo $client_id ;?>&redirect_uri=<?php echo $redirect_uri;?>&response_type=code","",'width=400,height=320');
+			$('.ig-authorize').on('click',function(){
+				window.open("https://api.instagram.com/oauth/authorize/?client_id=<?php echo $client_id ;?>&redirect_uri=<?php echo $redirect_uri;?>&response_type=code","ig_auth",'width=400,height=320');
 			})
 		});
 	})(jQuery)
+	*/
 </script>
 <?php } ?>
+
+
 
 
 
