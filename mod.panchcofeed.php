@@ -270,6 +270,28 @@ class Panchcofeed {
     
     }
     
+    /**
+	  * Instagram user object for output to template.
+	  */
+	  public function ig_user()
+	 {
+		$this->set_application();
+		$this->props['ig_username'] = $this->ig_username;
+		$obj = $this->user_find($this->ig_username);
+		
+		$this->props['ig_username'] = $obj->username;
+		$this->props['ig_bio'] = $obj->bio;
+		$this->props['ig_website'] = $obj->website;
+		$this->props['ig_profile_picture'] = $obj->profile_picture;
+		$this->props['ig_full_name'] = $obj->full_name;
+		$this->props['ig_id'] = $obj->id;	
+		$this->props['user_found'] = $obj->user_found;
+		
+		$variables[] = $this->props;
+    
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+	 }
+    
 
         
         /**
@@ -553,27 +575,7 @@ class Panchcofeed {
 	 
 	 
 	 
-	 /**
-	  * Instagram user object.
-	  */
-	  public function ig_user()
-	 {
-		$this->set_application();
-		$this->props['ig_username'] = $this->ig_username;
-		$obj = $this->user_find($this->ig_username);
-		
-		$this->props['ig_username'] = $obj->username;
-		$this->props['ig_bio'] = $obj->bio;
-		$this->props['ig_website'] = $obj->website;
-		$this->props['ig_profile_picture'] = $obj->profile_picture;
-		$this->props['ig_full_name'] = $obj->full_name;
-		$this->props['ig_id'] = $obj->id;	
-		$this->props['user_found'] = $obj->user_found;
-		
-		$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
-	 }
+
 	 
 	 
 	 
