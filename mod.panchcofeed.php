@@ -11,6 +11,9 @@ class Panchcofeed {
     var 		$media_count	= 1;
     var 		$endpoint		= '';
     var 		$tag_delimiter	= ',';
+    var 		$next_url		= '';
+    var 		$page_id		= NULL;
+    var 		$next_page		= NULL;
     
     
     function __construct()
@@ -91,11 +94,259 @@ class Panchcofeed {
 	    {
 	    	$this->tag_delimiter = ee()->TMPL->fetch_param('tag_delimiter');
 	    }
+	    
+		// Fetch the page_id property.
+	    if(ee()->TMPL->fetch_param('page_id'))
+	    {
+	    	$this->page_id = ee()->TMPL->fetch_param('page_id');
+	    }
 		 
 	 }
 	    
 	    
+    
+    /**
+     * Get Instagram items by hashtag.
+     */
+    function media_hashtag()
+    {
+    
+    	// Query db and set the application properties.
+    	$this->set_application();
+	   
+		// Build out the endpoint url
+
+		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->props['hashtag']."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count .'&max_tag_id='.$this->page_id;
+
+		//$response = $this->get_curl($this->props['endpoint']);
+		$response	= CurlHelper::getCurl($this->props['endpoint']);
+		
+
+		$obj = json_decode($response);
+
+		// Add pagination properties.
+		if(isset($obj->pagination))
+		{
+			$this->add_pagination_properties($obj->pagination);
+		}
+		
+		// Add meta properties.
+		if(isset($obj->meta))
+		{
+			$this->add_meta_properties($obj->meta);
+		} 
+
+		
+		// Add media data array 
+		if(isset($obj->data))
+		{
+			$this->add_media_array($obj->data);
+
+		} else {
+			
+			$this->props['media'][] = array();
+		}
+		
+		
+    	$variables[] = $this->props;
+    
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+    
+    }
+    
+    
+   /**
+    * Get feed of media items from Instagram users athenticated user follows.
+    */
+    function media_feed()
+    {
+    
+    	// Query db and set the application properties.
+    	$this->set_application();
+
+		// Build out the endpoint url
+		$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/feed?access_token=" . $this->access_token . "&count=".$this->media_count .'&max_tag_id='.$this->page_id;
+
+
+		$response	= CurlHelper::getCurl($this->props['endpoint']);
+
+		$obj = json_decode($response);
+		
+		// Add pagination properties.
+		if(isset($obj->pagination))
+		{
+			$this->add_pagination_properties($obj->pagination);
+		}
+		
+		// Add meta properties.
+		if(isset($obj->meta))
+		{
+			$this->add_meta_properties($obj->meta);
+		
+		} 
+
+		
+		// Add media data array 
+		if(isset($obj->data))
+		{
+			$this->add_media_array($obj->data);
+			
+
+			
+		} else {
+			
+			// Something went wrong, pass an empty array for the media property.
+			$this->props['media'][] = array();
+		}
+		
+		
+    	$variables[] = $this->props;
+    
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+    
+    }
+    
+    
+	
 	/**
+	 * Get media added by authenticated user.
+	 */
+	 function media_user()
+    {
+    
+    	// Query db and set the application properties.
+    	$this->set_application();
+    	
+    	// Set the authenticated user data to props.
+    	$this->add_ig_user_array($this->ig_user);
+		
+		// Build out the endpoint url
+		$this->props['endpoint'] = "https://api.instagram.com/v1/users/" . $this->ig_user->id . "/media/recent/?client_id=" . $this->client_id . "&count=".$this->media_count .'&max_id='.$this->page_id;
+
+
+		$response	= CurlHelper::getCurl($this->props['endpoint']);
+
+		$obj = json_decode($response);
+		
+
+		// Add pagination properties.
+		if(isset($obj->pagination))
+		{
+			$this->add_pagination_properties($obj->pagination);
+		}
+		
+		// Add meta properties.
+		if(isset($obj->meta))
+		{
+			$this->add_meta_properties($obj->meta);
+		
+		} 
+
+		
+		// Add media data array 
+		if(isset($obj->data))
+		{
+			$this->add_media_array($obj->data);
+			
+
+			
+		} else {
+			
+			// Something went wrong, pass an empty array for the media property.
+			$this->props['media'][] = array();
+		}
+		
+		
+    	$variables[] = $this->props;
+    
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+    
+    }
+    
+
+        
+        /**
+         * Do the Instagram oAuth dance.
+         */
+        public function ig_auth()
+        {
+	        
+	        // If Instagram has responded with an authorization code, submit that to get the access token.
+	        if(ee()->input->get('code'))
+	        {
+	        
+	        	// Get application row from the db
+	        	// Get IG applcation settings from db.
+			 	$row	= ee()->db
+							->get('panchcofeed_applications')
+							->row();
+							
+							
+
+	        	$url						= 'https://api.instagram.com/oauth/access_token';
+	        	$fields['client_id'] 		= $row->client_id;
+	        	$fields['client_secret']	= $row->client_secret;
+	        	$fields['redirect_uri']		= $row->redirect_uri;
+	        	$fields['grant_type']		= $row->grant_type;
+	        	$fields['code']				= ee()->input->get('code',TRUE);
+	        	
+	        	$response = json_decode(CurlHelper::postCurl($url,$fields));
+
+	        	
+	        	if( $response )
+	        	{
+		        	
+		        	if(isset($response->access_token)) 
+		        	{
+			        	// Success, save the access token.
+			        	
+			        	$data['access_token']	= $response->access_token;
+			        	$data['ig_user']		= serialize($response->user);
+			        	
+			        	ee()->db->where('app_id',$row->app_id)
+			        		->update('panchcofeed_applications',$data);
+			        		
+			        		$vars['msg'] = lang('auth_success');
+							
+		        		
+		        		} else {
+			        		
+			        		$vars['msg']	= lang('auth_fail');
+
+		        	}
+		        	
+		        	$vars['close_window'] = lang('close_window');
+		        	return ee()->load->view('auth_response',$vars);
+		        	
+	        	}
+	        } 
+        }
+        
+        /**
+         * Confirm authentication for an application.
+         */
+         public function ajax_confirm_auth()
+         {
+         
+         	ee()->load->model('applications_model','applications');
+         	
+         	 $vars['authenticated']	= FALSE;
+	         $vars['authorize']	= lang('authorize');
+	         $vars['app_id'] = ee()->input->get('app_id',TRUE);
+	         $vars['client_id']	= ee()->input->post('client_id',TRUE);
+	         
+				if(ee()->applications->access_token_valid())
+				{
+					$vars['authenticated']	= TRUE;
+				} 	
+     
+	         	return ee()->load->view("ajax_auth_row",$vars);
+	         
+	         die();
+         }
+         
+         
+         	/**
 	 * Add pagination object properties to this->props
 	 * @param $pagination IG Pagination object from response.
 	 * @return boolean.
@@ -104,11 +355,19 @@ class Panchcofeed {
 	 {
 		 if(isset($pagination->next_max_tag_id))
 		 {
-		 	$this->props['next_max_tag_id'] = $pagination->next_max_tag_id;
+		 	$this->props['next_max_tag_id']	= $pagination->next_max_tag_id;
+		 	$this->props['next_page']		= $pagination->next_max_tag_id;
 		 
+		 } elseif(isset($pagination->next_max_id)) {
+			 
+			$this->props['next_max_tag_id']	= $pagination->next_max_id;
+		 	$this->props['next_page']		= $pagination->next_max_id;
+			 
 		 } else {
 		 
 			 $this->props['next_max_tag_id'] = NULL;
+			 $this->props['next_page']		= NULL;
+			 
 		 }
 		 
 		 if(isset($pagination->min_tag_id))
@@ -129,6 +388,7 @@ class Panchcofeed {
 			 $this->props['next_url'] = NULL;
 		 }
 		 
+
 		 return TRUE;
 		 
 	 }
@@ -268,8 +528,7 @@ class Panchcofeed {
 		 
 		 }
 		 
-		 return TRUE;
-		 
+		 return TRUE; 
 	 }
 	 
 	 
@@ -282,258 +541,9 @@ class Panchcofeed {
 	 {
 	 
 	 	return $this->props['ig_user'][] = (array) $ig_user;
-	 
-	 
+
 	 }    
-    
-    /**
-     * Get Instagram items by hashtag.
-     */
-    function media_hashtag()
-    {
-    
-    	// Query db and set the application properties.
-    	$this->set_application();
-	   
 
-		
-		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->props['hashtag']."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count;
-
-		//$response = $this->get_curl($this->props['endpoint']);
-		$response	= CurlHelper::getCurl($this->props['endpoint']);
-		
-
-		$obj = json_decode($response);
-		
-
-		// Add pagination properties.
-		if(isset($obj->pagination))
-		{
-			$this->add_pagination_properties($obj->pagination);
-		}
-		
-		// Add meta properties.
-		if(isset($obj->meta))
-		{
-			$this->add_meta_properties($obj->meta);
-		
-		} 
-
-		
-		// Add media data array 
-		if(isset($obj->data))
-		{
-			$this->add_media_array($obj->data);
-			
-
-			
-		} else {
-			
-			$this->props['media'][] = array();
-		}
-		
-		
-    	$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
-    
-    }
-    
-    
-    
-   /**
-    * Get feed of media items from Instagram users athenticated user follows.
-    */
-    function media_feed()
-    {
-    
-    	// Query db and set the application properties.
-    	$this->set_application();
-	   
-
-		
-		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/feed?access_token=" . $this->access_token . "&count=".$this->media_count;
-
-
-		$response	= CurlHelper::getCurl($this->props['endpoint']);
-
-		$obj = json_decode($response);
-		
-
-		// Add pagination properties.
-		if(isset($obj->pagination))
-		{
-			$this->add_pagination_properties($obj->pagination);
-		}
-		
-		// Add meta properties.
-		if(isset($obj->meta))
-		{
-			$this->add_meta_properties($obj->meta);
-		
-		} 
-
-		
-		// Add media data array 
-		if(isset($obj->data))
-		{
-			$this->add_media_array($obj->data);
-			
-
-			
-		} else {
-			
-			// Something went wrong, pass an empty array for the media property.
-			$this->props['media'][] = array();
-		}
-		
-		
-    	$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
-    
-    }
-    
-    
-	
-	/**
-	 * Get media added by authenticated user.
-	 */
-	 function media_user()
-    {
-    
-    	// Query db and set the application properties.
-    	$this->set_application();
-    	
-    	// Set the authenticated user data to props.
-    	$this->add_ig_user_array($this->ig_user);
-		
-		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/users/" . $this->ig_user->id . "/media/recent/?client_id=" . $this->client_id . "&count=".$this->media_count;
-
-
-		$response	= CurlHelper::getCurl($this->props['endpoint']);
-
-		$obj = json_decode($response);
-		
-
-		// Add pagination properties.
-		if(isset($obj->pagination))
-		{
-			$this->add_pagination_properties($obj->pagination);
-		}
-		
-		// Add meta properties.
-		if(isset($obj->meta))
-		{
-			$this->add_meta_properties($obj->meta);
-		
-		} 
-
-		
-		// Add media data array 
-		if(isset($obj->data))
-		{
-			$this->add_media_array($obj->data);
-			
-
-			
-		} else {
-			
-			// Something went wrong, pass an empty array for the media property.
-			$this->props['media'][] = array();
-		}
-		
-		
-    	$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
-    
-    }
-    
-
-        
-        /**
-         * Do the Instagram oAuth dance.
-         */
-        public function ig_auth()
-        {
-	        
-	        // If Instagram has responded with an authorization code, submit that to get the access token.
-	        if(ee()->input->get('code'))
-	        {
-	        
-	        	// Get application row from the db
-	        	// Get IG applcation settings from db.
-			 	$row	= ee()->db
-							->get('panchcofeed_applications')
-							->row();
-							
-							
-
-	        	$url						= 'https://api.instagram.com/oauth/access_token';
-	        	$fields['client_id'] 		= $row->client_id;
-	        	$fields['client_secret']	= $row->client_secret;
-	        	$fields['redirect_uri']		= $row->redirect_uri;
-	        	$fields['grant_type']		= $row->grant_type;
-	        	$fields['code']				= ee()->input->get('code',TRUE);
-	        	
-	        	$response = json_decode(CurlHelper::postCurl($url,$fields));
-
-	        	
-	        	if( $response )
-	        	{
-		        	
-		        	if(isset($response->access_token)) 
-		        	{
-			        	// Success, save the access token.
-			        	
-			        	$data['access_token']	= $response->access_token;
-			        	$data['ig_user']		= serialize($response->user);
-			        	
-			        	ee()->db->where('app_id',$row->app_id)
-			        		->update('panchcofeed_applications',$data);
-			        		
-			        		$vars['msg'] = lang('auth_success');
-							
-		        		
-		        		} else {
-			        		
-			        		$vars['msg']	= lang('auth_fail');
-
-		        	}
-		        	
-		        	$vars['close_window'] = lang('close_window');
-		        	return ee()->load->view('auth_response',$vars);
-		        	
-	        	}
-	        } 
-        }
-        
-        /**
-         * Confirm authentication for an application.
-         */
-         public function ajax_confirm_auth()
-         {
-         
-         	ee()->load->model('applications_model','applications');
-         	
-         	 $vars['authenticated']	= FALSE;
-	         $vars['authorize']	= lang('authorize');
-	         $vars['app_id'] = ee()->input->get('app_id',TRUE);
-	         $vars['client_id']	= ee()->input->post('client_id',TRUE);
-	         
-				if(ee()->applications->access_token_valid())
-				{
-					$vars['authenticated']	= TRUE;
-				} 	
-     
-	         	return ee()->load->view("ajax_auth_row",$vars);
-	         
-	         die();
-         }
          
         
         
