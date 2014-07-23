@@ -182,6 +182,38 @@ class Panchcofeed {
     	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
     
     }
+    
+    
+    	/**
+	 * Get Instagram media like by  the authenticated user.
+	 */
+	 function media_self_liked()
+    {
+    
+        // Query db and set the application properties.
+    	$this->set_application();
+
+    	if(TRUE === $this->configured)
+    	{
+    	
+    	// Set the authenticated user data to props.
+    	$this->add_ig_user_array($this->ig_user);
+		
+		
+		// Build out the endpoint url
+		$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/media/liked?access_token=" . $this->access_token . "&count=" . $this->media_count . "&max_like_id=" . $this->page_id;
+
+
+		$this->parse_media();
+		
+		} 
+
+		$variables[] = $this->props;
+    
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+    
+    }
+    
 
     
     /**
@@ -455,6 +487,7 @@ class Panchcofeed {
 	 */
 	 private function add_pagination_properties($pagination)
 	 {
+		 
 		 if(isset($pagination->next_max_tag_id))
 		 {
 		 	$this->props['next_max_tag_id']	= $pagination->next_max_tag_id;
@@ -464,6 +497,11 @@ class Panchcofeed {
 			 
 			$this->props['next_max_tag_id']	= $pagination->next_max_id;
 		 	$this->props['next_page']		= $pagination->next_max_id;
+			 
+		 } elseif(isset($pagination->next_max_like_id)) {
+			 
+			 $this->props['next_max_like_id']	= $pagination->next_max_like_id;
+			 $this->props['next_page']			= $pagination->next_max_like_id;
 			 
 		 } else {
 		 
