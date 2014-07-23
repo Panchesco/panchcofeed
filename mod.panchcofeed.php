@@ -234,6 +234,9 @@ class Panchcofeed {
 			     
 			     $this->set_ig_user($this->ig_username);
 			     
+			    
+			     
+			     
 			     $this->ig_id = $this->props['ig_id'];
 		     
 		     // If neither of those are there, set the ig_id property from $this->ig_user;
@@ -372,10 +375,10 @@ class Panchcofeed {
      {
 	     
 	    $response	= CurlHelper::getCurl($this->props['endpoint']);
+	    
 
-		$obj = json_decode($response);
+	    $obj = json_decode($response);
 		
-
 		// Add pagination properties.
 		if(isset($obj->pagination))
 		{
@@ -389,14 +392,11 @@ class Panchcofeed {
 		
 		} 
 
-		
 		// Add media data array 
 		if(isset($obj->data))
 		{
 			$this->add_media_array($obj->data);
-			
 
-			
 		} else {
 			
 			// Something went wrong, pass an empty array for the media property.
@@ -713,7 +713,7 @@ class Panchcofeed {
 		  {
 			  
 				$response->data[0]->user_found = TRUE;
-		  
+
 		  
 				} else {
 			 
@@ -729,7 +729,9 @@ class Panchcofeed {
 
 		  } 
 		  
-
+		  // Make user data available to template.
+		  $this->add_ig_user_array($response->data[0]);
+		  
 		  return $response->data[0];; 
 	  } 
 
