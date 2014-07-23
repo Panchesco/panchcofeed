@@ -2,12 +2,13 @@
 
 class Panchcofeed {
 
+    var 		$configured		= FALSE;
     var 		$return_data    = '';
     var 		$hashtag		= '';
     var 		$application	= '';
     var			$client_id		= '';
     var			$client_secret	= '';
-    var			$props			= array();
+    var			$props			= array('error_message'=>'');
     var 		$media_count	= 1;
     var 		$endpoint		= '';
     var 		$tag_delimiter	= ',';
@@ -25,8 +26,8 @@ class Panchcofeed {
 
 		ee()->lang->loadfile('panchcofeed');
 		ee()->load->helper('panchco_curl');
-		
-	    }
+
+	}
 	    
 	    
 	    /**
@@ -52,18 +53,23 @@ class Panchcofeed {
 		    			->order_by('app_id','DESC')
 		    			->get('panchcofeed_applications')
 		    			->row();
-		    			
 	    			}
 	    
 					if($row)
 					{
+							$this->configured		= TRUE;
 							$this->app_id			= $row->app_id;
 					    	$this->client_id		= $row->client_id;
 							$this->client_secret	= $row->client_secret;
 							$this->access_token		= $row->access_token;
 							$this->ig_user			= @unserialize($row->ig_user);
 							$this->props['application']	= $row->application;
-					}  					
+					} else {
+						
+						$this->props['error_message'] = lang('not_configured');
+					}
+					
+								
 	     }
 	     
 
@@ -74,14 +80,19 @@ class Panchcofeed {
     function media_hashtag()
     {
     
-    	// Query db and set the application properties.
+    // Query db and set the application properties.
     	$this->set_application();
-	   
+    	
+    	if(TRUE === $this->configured)
+    	{ 
+
 		// Build out the endpoint url
 		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->props['hashtag']."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count .'&max_tag_id='.$this->page_id;
 		
 		$this->parse_media();
 
+    	} 
+    	  	
     	$variables[] = $this->props;
     
     	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
@@ -96,40 +107,43 @@ class Panchcofeed {
     {
     
     	// Query db and set the application properties.
-    	$this->set_application();
-
-		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/feed?access_token=" . $this->access_token . "&count=".$this->media_count .'&max_tag_id='.$this->page_id;
-
-
-		$response	= CurlHelper::getCurl($this->props['endpoint']);
-
-		$obj = json_decode($response);
-		
-		// Add pagination properties.
-		if(isset($obj->pagination))
+	    $this->set_application();
+    
+    	if(TRUE === $this->configured)
 		{
-			$this->add_pagination_properties($obj->pagination);
-		}
-		
-		// Add meta properties.
-		if(isset($obj->meta))
-		{
-			$this->add_meta_properties($obj->meta);
+			// Build out the endpoint url
+			$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/feed?access_token=" . $this->access_token . "&count=".$this->media_count .'&max_tag_id='.$this->page_id;
+	
+	
+			$response	= CurlHelper::getCurl($this->props['endpoint']);
+	
+			$obj = json_decode($response);
+			
+			// Add pagination properties.
+			if(isset($obj->pagination))
+			{
+				$this->add_pagination_properties($obj->pagination);
+			}
+			
+			// Add meta properties.
+			if(isset($obj->meta))
+			{
+				$this->add_meta_properties($obj->meta);
+			
+			} 
+	
+			// Add media data array 
+			if(isset($obj->data))
+			{
+				$this->add_media_array($obj->data);
+				
+			} else {
+				
+				// Something went wrong, pass an empty array for the media property.
+				$this->props['media'][] = array();
+			}
 		
 		} 
-
-		// Add media data array 
-		if(isset($obj->data))
-		{
-			$this->add_media_array($obj->data);
-			
-		} else {
-			
-			// Something went wrong, pass an empty array for the media property.
-			$this->props['media'][] = array();
-		}
-		
 		
     	$variables[] = $this->props;
     
@@ -145,8 +159,11 @@ class Panchcofeed {
 	 function media_self()
     {
     
-    	// Query db and set the application properties.
+        // Query db and set the application properties.
     	$this->set_application();
+    	
+    	if(TRUE === $this->configured)
+    	{
     	
     	// Set the authenticated user data to props.
     	$this->add_ig_user_array($this->ig_user);
@@ -156,58 +173,15 @@ class Panchcofeed {
 
 
 		$this->parse_media();
+		
+		} 
 
 		$variables[] = $this->props;
     
     	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
     
     }
-    
-    
-    
-    /**
-     * Parse a media response object to template variables.
-     * @return boolean.
-     */
-     private function parse_media()
-     {
-	     
-	    $response	= CurlHelper::getCurl($this->props['endpoint']);
 
-		$obj = json_decode($response);
-		
-
-		// Add pagination properties.
-		if(isset($obj->pagination))
-		{
-			$this->add_pagination_properties($obj->pagination);
-		}
-		
-		// Add meta properties.
-		if(isset($obj->meta))
-		{
-			$this->add_meta_properties($obj->meta);
-		
-		} 
-
-		
-		// Add media data array 
-		if(isset($obj->data))
-		{
-			$this->add_media_array($obj->data);
-			
-
-			
-		} else {
-			
-			// Something went wrong, pass an empty array for the media property.
-			$this->props['media'][] = array();
-		}
-		
-		return TRUE;
-	     
-     }
-    
     
     /**
      * Return media for an Instagram username.
@@ -216,30 +190,35 @@ class Panchcofeed {
      {
 	     $this->set_application();
 	     
-	     // Check for ig_id property.
-	     if( $this->ig_id ) {
-		     
-		     $this->props['ig_id'] = $this->ig_id;
+	     if(TRUE === $this->configured)
+	     {
 	     
-	     // If that's not there, check for ig_username property.
-	     } elseif($this->ig_username)  {
+		     // Check for ig_id property.
+		     if( $this->ig_id ) {
+			     
+			     $this->props['ig_id'] = $this->ig_id;
 		     
-		     $this->set_ig_user($this->ig_username);
+		     // If that's not there, check for ig_username property.
+		     } elseif($this->ig_username)  {
+			     
+			     $this->set_ig_user($this->ig_username);
+			     
+			     $this->ig_id = $this->props['ig_id'];
 		     
-		     $this->ig_id = $this->props['ig_id'];
+		     // If neither of those are there, set the ig_id property from $this->ig_user;
+		     } else {
+			     
+			    $this->props['ig_id'] = $this->ig_user->id;
+			     
+		     }
+		        
+		     $this->props['page_id'] = $this->page_id;
+	
+		     $this->props['endpoint'] = "https://api.instagram.com/v1/users/" . $this->props['ig_id'] . "/media/recent/?client_id=" . $this->client_id . "&count=" . $this->media_count . "&max_id=" . $this->page_id;
+		     
+		     $this->parse_media();
 	     
-	     // If neither of those are there, set the ig_id property from $this->ig_user;
-	     } else {
-		     
-		    $this->props['ig_id'] = $this->ig_user->id;
-		     
 	     }
-	        
-	     $this->props['page_id'] = $this->page_id;
-
-	     $this->props['endpoint'] = "https://api.instagram.com/v1/users/" . $this->props['ig_id'] . "/media/recent/?client_id=" . $this->client_id . "&count=" . $this->media_count . "&max_id=" . $this->page_id;
-	     
-	     $this->parse_media();
 	     
 		 $variables[] = $this->props;
     
@@ -252,9 +231,16 @@ class Panchcofeed {
 	  */
 	  public function ig_user()
 	 {
-		$this->set_application();
+	 	$this->set_application();
 		
-		$this->set_ig_user($this->ig_username);
+		if(TRUE === $this->configured)
+	    {
+		
+			$this->set_application();
+		
+			$this->set_ig_user($this->ig_username);
+		
+		}
     
     	$variables[] = $this->props;
     
@@ -344,6 +330,51 @@ class Panchcofeed {
          
          
     //----------------------------------------------------------------------------------
+    
+    
+    
+    /**
+     * Parse a media response object to template variables.
+     * @return boolean.
+     */
+     private function parse_media()
+     {
+	     
+	    $response	= CurlHelper::getCurl($this->props['endpoint']);
+
+		$obj = json_decode($response);
+		
+
+		// Add pagination properties.
+		if(isset($obj->pagination))
+		{
+			$this->add_pagination_properties($obj->pagination);
+		}
+		
+		// Add meta properties.
+		if(isset($obj->meta))
+		{
+			$this->add_meta_properties($obj->meta);
+		
+		} 
+
+		
+		// Add media data array 
+		if(isset($obj->data))
+		{
+			$this->add_media_array($obj->data);
+			
+
+			
+		} else {
+			
+			// Something went wrong, pass an empty array for the media property.
+			$this->props['media'][] = array();
+		}
+		
+		return TRUE;
+	     
+     }
          
          
 	/**
@@ -609,7 +640,15 @@ class Panchcofeed {
 	 private function add_ig_user_array($ig_user)
 	 {
 	 
-	 	return $this->props['ig_user'][] = (array) $ig_user;
+		 if(FALSE === isset($ig_user->id))
+		 {
+			 return $this->props['error_message'] = lang('not_authenticated');
+			 
+		 } else {
+		 
+		 	return $this->props['ig_user'][] = (array) $ig_user;
+		 	
+		 }
 
 	 }   
 	 
@@ -622,10 +661,17 @@ class Panchcofeed {
 	  private function user_find($ig_username)
 	  { 
 		  
-		  $endpoint = "https://api.instagram.com/v1/users/search?q=" . $ig_username . "&access_token=" . $this->access_token ."&count=1";
+		  $this->props['endpoint'] = "https://api.instagram.com/v1/users/search?q=" . $ig_username . "&access_token=" . $this->access_token ."&count=1";
 		  
-		  $response = json_decode(CurlHelper::getCurl($endpoint));
+		  $response = json_decode(CurlHelper::getCurl($this->props['endpoint'] ));
+		 
+		  // Set error message from Instagram response if there was one.
+		  if(isset($response->meta->code) && $response->meta->code != 200) 
+		  {
+			  $this->props['error_message'] = implode("<br />\n",(array) $response->meta);
+		  }
 		  
+		  // Set user object if response successful. 
 		  if(isset($response->meta->code) && $response->meta->code == 200 && isset($response->data[0]))
 		  {
 			  
@@ -634,7 +680,7 @@ class Panchcofeed {
 		  
 				} else {
 			 
-				  
+		  // Otherwise, return object with null values.	  
 				  $response = new stdClass();
 				  $response->data[0]->user_found = FALSE;
 				  $response->data[0]->username = NULL;
@@ -643,10 +689,10 @@ class Panchcofeed {
 				  $response->data[0]->profile_picture = NULL;
 				  $response->data[0]->full_name = NULL;
 				  $response->data[0]->id = NULL;
-		  }
+
+		  } 
 		  
-		  
-		  
+
 		  return $response->data[0];; 
 	  } 
 

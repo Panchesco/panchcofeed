@@ -82,6 +82,10 @@ $lang = array(
 'No applications were selected',
 'add_app' =>
 'Add your application',
+'not_configured' => 
+'It appears the Panchcofeed module is installed but may not yet be configured.',
+'not_authenticated' =>
+'It appears the application configured in the module has not yet been authorized with Instagram',
 //
 ''=>''
 );
