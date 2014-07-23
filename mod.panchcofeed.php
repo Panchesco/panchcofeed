@@ -69,8 +69,7 @@ class Panchcofeed {
 						
 						$this->props['error_message'] = lang('not_configured');
 					}
-					
-								
+	
 	     }
 	     
 
