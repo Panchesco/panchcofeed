@@ -224,7 +224,6 @@ class Panchcofeed {
 	     
 	     if(TRUE === $this->configured)
 	     {
-	     
 		     // Check for ig_id property.
 		     if( $this->ig_id ) {
 			     
