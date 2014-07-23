@@ -53,8 +53,9 @@ class Panchcofeed {
 		    			->order_by('app_id','DESC')
 		    			->get('panchcofeed_applications')
 		    			->row();
+
 	    			}
-	    
+
 					if($row)
 					{
 							$this->configured		= TRUE;
@@ -161,7 +162,7 @@ class Panchcofeed {
     
         // Query db and set the application properties.
     	$this->set_application();
-    	
+
     	if(TRUE === $this->configured)
     	{
     	

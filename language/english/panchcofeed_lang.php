@@ -83,7 +83,12 @@ $lang = array(
 'add_app' =>
 'Add your application',
 'not_configured' => 
-'It appears the Panchcofeed module is installed but may not yet be configured.',
+'It appears the Panchcofeed module is installed but there may be a problem with the configuration:
+<ul>
+	<li> The module may not yet be configured./li>
+	<li> The configured application name is different from the template parameter.</li>
+</ul>
+',
 'not_authenticated' =>
 'It appears the application configured in the module has not yet been authorized with Instagram',
 //
