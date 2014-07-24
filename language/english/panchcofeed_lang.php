@@ -24,6 +24,15 @@ $lang = array(
 'mcp_index_content' => 
 'To register a new Instagram application or manage existing ones, visit, <a target="_blank" href="http://instagram.com/developer/clients/manage/">http://instagram.com/developer/clients/manage/</a>.',
 
+'create' =>
+'Create',
+'update' =>
+'Update',
+'id' =>
+'ID',
+'ig_authorization' =>
+'Instagram Authorization',
+
 'add_application_instructions' => 
 '',
 'yes' => 
@@ -34,8 +43,13 @@ $lang = array(
 'Application',
 'username' =>
 'Username',
-'create_modify_copy' => 
-'To register a new Instagram application or manage existing ones, first visit, <a target="_blank" href="http://instagram.com/developer/clients/manage/">http://instagram.com/developer/clients/manage/</a>.<br />Then return to this page and enter/update the Application name, Client ID, and Client Secret.',
+
+'create_copy' => 
+'To register a new Instagram application or manage existing ones, first visit, <a target="_blank" href="http://instagram.com/developer/clients/manage/">http://instagram.com/developer/clients/manage/</a> where you\'ll register a client for use by this module. The WEBSITE URL and REDIRECT URI values you submit must be exactly as shown below. Once you have registered the new client at Instagram, use the Client ID and Client Secret values Instagram provides on this form.',
+
+'modify_copy' => 
+'[modify copy]',
+
 'client_id' =>
 'Client ID',
 'client_secret' =>
@@ -91,6 +105,8 @@ $lang = array(
 ',
 'not_authenticated' =>
 'It appears the application configured in the module has not yet been authorized with Instagram',
+'return_landing_text'=>
+'Return to landing page',
 //
 ''=>''
 );

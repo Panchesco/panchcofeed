@@ -8,10 +8,10 @@
 <table class="mainTable" cellpadding="0" cellspacing="0" border="0">
 	<thead>
 		<tr>
-			<th>ID</th>
-			<th>Application</th>
-			<th>Instagram Authentication</th>
-			<th><input type="checkbox" id="select_all" name="select_all" value="" class"toggle_all" /> Delete</th>
+			<th><?php echo lang('id');?></th>
+			<th><?php echo lang('application');?></th>
+			<th><?php echo lang('ig_authorization');?></th>
+			<th><input type="checkbox" id="select_all" name="select_all" value="" class"toggle_all" /> <?php echo lang('delete');?></th>
 		</tr>		
 	</thead>
 	<tbody>
@@ -36,10 +36,24 @@
 <script>
 (function($){
 	$(document).ready(function(){
+	
+	function popupwindow(url, title, w, h) 
+	{
+		var left = (screen.width/2)-(w/2);
+		var top = (screen.height/2)-(h/2);
+		return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+	}
+		
+	
+	
+	
 		function igAuthWin(clientId,redirectUri)
 		{
+	
+			url = 
+			popupwindow("https://api.instagram.com/oauth/authorize/?client_id="+clientId+"&redirect_uri="+redirectUri+"&response_type=code",'ig_auth',400,320);
 
-			window.open("https://api.instagram.com/oauth/authorize/?client_id="+clientId+"&redirect_uri="+redirectUri+"&response_type=code","ig_auth",'width=400,height=320');
+			/*window.open("https://api.instagram.com/oauth/authorize/?client_id="+clientId+"&redirect_uri="+redirectUri+"&response_type=code","ig_auth",'width=400,height=320');*/
 
 		}
 	
