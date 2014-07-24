@@ -44,12 +44,9 @@ $lang = array(
 'username' =>
 'Username',
 
-'create_copy' => 
-'To register a new Instagram application or manage existing ones, first visit, <a target="_blank" href="http://instagram.com/developer/clients/manage/">http://instagram.com/developer/clients/manage/</a> where you\'ll register a client for use by this module. The WEBSITE URL and REDIRECT URI values you submit must be exactly as shown below. Once you have registered the new client at Instagram, use the Client ID and Client Secret values Instagram provides on this form.',
-
-'modify_copy' => 
-'[modify copy]',
-
+'create_modify' => 
+'To register a new Instagram application or manage existing ones, first visit, <a target="_blank" href="http://instagram.com/developer/clients/manage/">http://instagram.com/developer/clients/manage/</a>.<br />
+There you\'ll register a client for use by this module. Be certain the values you enter for WEBSITE URL and REDIRECT URI are exactly as shown below.<br /><br />Once you have registered the new client at Instagram, use the Client ID and Client Secret values Instagram provides on this form.',
 'client_id' =>
 'Client ID',
 'client_secret' =>

@@ -124,7 +124,7 @@
 					if($valid == TRUE && ee()->applications->modify())
 					{
 						ee()->session->set_flashdata('message_success', lang('modify_success'));
-						ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed'.AMP.'method=modify'.AMP.'app_id='.ee()->applications->app_id);
+						ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
 						
 						} else {
 

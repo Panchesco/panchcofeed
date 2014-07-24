@@ -1,8 +1,4 @@
-<?php if($method == "create") { ?>
-<p><?php echo lang('create_copy');?></p>
-<?php } else { ?>
-<p><?php echo lang('modify_copy');?></p>
-<?php } ?>
+<p><?php echo lang('create_modify');?></p>
 <?php echo form_open('C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed'.AMP.'method='. $method . AMP.'app_id='.$app_id, '')?>
 <table class="mainTable solo" cellpadding="0" cellspacing="0" border="0">
 	<thead>
