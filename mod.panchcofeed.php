@@ -9,7 +9,7 @@ class Panchcofeed {
     var			$client_id		= '';
     var			$client_secret	= '';
     var			$props			= array('error_message'=>'');
-    var 		$media_count	= 1;
+    var 		$media_count	= 25;
     var 		$endpoint		= '';
     var 		$tag_delimiter	= ',';
     var 		$next_url		= '';
@@ -60,7 +60,7 @@ class Panchcofeed {
 					{
 							$this->configured		= TRUE;
 							$this->app_id			= $row->app_id;
-					    	$this->client_id		= $row->client_id;
+					    $this->client_id		= $row->client_id;
 							$this->client_secret	= $row->client_secret;
 							$this->access_token		= $row->access_token;
 							$this->ig_user			= @unserialize($row->ig_user);
@@ -177,7 +177,8 @@ class Panchcofeed {
 		} 
 
 		$variables[] = $this->props;
-    
+		
+		
     	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
     
     }
@@ -396,12 +397,15 @@ class Panchcofeed {
 		if(isset($obj->data))
 		{
 			$this->add_media_array($obj->data);
-
+			
+			
 		} else {
 			
 			// Something went wrong, pass an empty array for the media property.
 			$this->props['media'][] = array();
 		}
+		
+		$this->props['total_media'] = count($this->props['media']);
 		
 		return TRUE;
 	     
@@ -579,9 +583,14 @@ class Panchcofeed {
 	 	if(is_array($data))
 	 	{
 		 
+		 	$this->props['total_media']	= count($data);
+		 	$i = 0;
+			 
 			 foreach($data as $key=>$row)
 			 {
 			 
+			 		$i++;
+			 		
 			 		// Videos
 			 		$vids = new stdClass();
 			 		
@@ -624,8 +633,8 @@ class Panchcofeed {
 				 		$vids->standard_resolution_height = NULL;
 			 		}
 			 		
-	
-				 	$this->props['media'][] = array(
+			 		
+			 		$this->props['media'][] = array(
 				 							
 				 						'link' => $row->link,
 				 						'filter' => $row->filter,
@@ -645,8 +654,6 @@ class Panchcofeed {
 				 						'ig_username' => $row->user->username,
 				 						'ig_user_profile_picture' => $row->user->profile_picture,
 				 						'ig_user_full_name' => $row->user->full_name,
-				 						'ig_user_bio' => $row->user->bio,
-				 						'ig_user_website' => $row->user->website,
 				 						'ig_user_id' => $row->user->id,
 				 						'video_low_bandwidth_url' => $vids->low_bandwidth_url,
 				 						'video_low_bandwidth_width' => $vids->low_bandwidth_width,
@@ -659,8 +666,8 @@ class Panchcofeed {
 				 						'video_standard_resolution_height' => $vids->standard_resolution_height,
 				 						'media_tags' => implode($this->tag_delimiter,$row->tags),
 				 						'caption' => (isset($row->caption->text)) ? $row->caption->text : '',
+				 						'media_count'	=> $i
 				 			);
-	
 			 }
 		 
 		 }
