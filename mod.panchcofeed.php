@@ -29,7 +29,8 @@ class Panchcofeed {
 
 	}
 	    
-	    
+// -----------------------------------------------------------------------------
+
 	    /**
 	     * Fetch the application row.
 	     */
@@ -72,91 +73,100 @@ class Panchcofeed {
 	
 	     }
 	     
-
+	     
+// -----------------------------------------------------------------------------
+	    
     
     /**
      * Get Instagram items by hashtag.
      */
-    function media_hashtag()
+    public function media_hashtag()
     {
     
     // Query db and set the application properties.
     	$this->set_application();
     	
-    	if(TRUE === $this->configured)
+    	if(TRUE === $this->configured && isset($this->props['hashtag']))
     	{ 
 
-		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/tags/".$this->props['hashtag']."/media/recent?client_id=".$this->client_id.'&count='.$this->media_count .'&max_tag_id='.$this->page_id;
-		
-		$this->parse_media();
+				// Build out the endpoint url
+				$endpoint = "https://api.instagram.com/v1/tags/";
+				$endpoint.= $this->props['hashtag'];
+				$endpoint.= "/media/recent?client_id=";
+				$endpoint.= $this->client_id.'&count='.$this->media_count;
+				$endpoint.= '&max_tag_id='.$this->page_id;
+
+				$this->props['endpoint']	= $endpoint;
+				
+				$this->parse_media();
 
     	} 
     	  	
-    	$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
     
     }
-    
+ 
+ // -----------------------------------------------------------------------------   
     
    /**
     * Get feed of media items from Instagram users athenticated user follows.
     */
-    function media_feed()
+    public function media_feed()
     {
-    
-    	// Query db and set the application properties.
-	    $this->set_application();
-    
-    	if(TRUE === $this->configured)
-		{
-			// Build out the endpoint url
-			$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/feed?access_token=" . $this->access_token . "&count=".$this->media_count .'&max_tag_id='.$this->page_id;
-	
-	
-			$response	= CurlHelper::getCurl($this->props['endpoint']);
-	
-			$obj = json_decode($response);
-			
-			// Add pagination properties.
-			if(isset($obj->pagination))
-			{
-				$this->add_pagination_properties($obj->pagination);
-			}
-			
-			// Add meta properties.
-			if(isset($obj->meta))
-			{
-				$this->add_meta_properties($obj->meta);
-			
-			} 
-	
-			// Add media data array 
-			if(isset($obj->data))
-			{
-				$this->add_media_array($obj->data);
-				
-			} else {
-				
-				// Something went wrong, pass an empty array for the media property.
-				$this->props['media'][] = array();
-			}
+		    
+		   // Query db and set the application properties.
+			 $this->set_application();
+		    
+		    	if(TRUE === $this->configured)
+				{
+					// Build out the endpoint url
+					
+					$endpoint	=	"https://api.instagram.com/v1/users/self/feed?access_token=";
+					$endpoint.= $this->access_token . "&count=".$this->media_count;
+					$endpoint.= '&max_tag_id='.$this->page_id;
+					
+					$this->props['endpoint'] = $endpoint;
 		
-		} 
+					$response	= CurlHelper::getCurl($this->props['endpoint']);
+			
+					$obj = json_decode($response);
+					
+					// Add pagination properties.
+					if(isset($obj->pagination))
+					{
+						$this->add_pagination_properties($obj->pagination);
+					}
+					
+					// Add meta properties.
+					if(isset($obj->meta))
+					{
+						$this->add_meta_properties($obj->meta);
+					
+					} 
+			
+					// Add media data array 
+					if(isset($obj->data))
+					{
+						$this->add_media_array($obj->data);
+						
+					} else {
+						
+						// Something went wrong, pass an empty array for the media property.
+						$this->props['media'][] = array();
+					}
+				
+				} 
 		
-    	$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
     
     }
     
-    
+// -----------------------------------------------------------------------------    
 	
 	/**
 	 * Get Instagram media for the authenticated user.
 	 */
-	 function media_self()
+	 public function media_self()
     {
     
         // Query db and set the application properties.
@@ -168,26 +178,27 @@ class Panchcofeed {
     	// Set the authenticated user data to props.
     	$this->add_ig_user_array($this->ig_user);
 		
-		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/users/" . $this->ig_user->id . "/media/recent/?client_id=" . $this->client_id . "&count=".$this->media_count .'&max_id='.$this->page_id;
-
-
-		$this->parse_media();
+			// Build out the endpoint url
+			$endpoint	= "https://api.instagram.com/v1/users/" . $this->ig_user->id;
+			$endpoint.= "/media/recent/?client_id=" . $this->client_id . "&count=";
+			$endpoint.= $this->media_count .'&max_id='.$this->page_id;
 		
-		} 
+			$this->props['endpoint'] = $endpoint;
 
-		$variables[] = $this->props;
+			$this->parse_media();
 		
-		
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+			} 
+
+			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
     
     }
     
+// -----------------------------------------------------------------------------
     
-    	/**
+  /**
 	 * Get Instagram media like by  the authenticated user.
 	 */
-	 function media_self_liked()
+	 public function media_self_liked()
     {
     
         // Query db and set the application properties.
@@ -198,23 +209,23 @@ class Panchcofeed {
     	
     	// Set the authenticated user data to props.
     	$this->add_ig_user_array($this->ig_user);
-		
-		
-		// Build out the endpoint url
-		$this->props['endpoint'] = "https://api.instagram.com/v1/users/self/media/liked?access_token=" . $this->access_token . "&count=" . $this->media_count . "&max_like_id=" . $this->page_id;
 
-
-		$this->parse_media();
-		
-		} 
-
-		$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+			// Build out the endpoint url
+			$endpoint	= "https://api.instagram.com/v1/users/self/media/liked?access_token=";
+			$endpoint.= $this->access_token . "&count=" . $this->media_count . "&max_like_id=";
+			$endpoint.= $this->page_id;
+			
+			$this->props['endpoint'] = $endpoint;
+			
+			$this->parse_media();
+			
+			} 
+			
+			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
     
     }
     
-
+// -----------------------------------------------------------------------------
     
     /**
      * Return media for an Instagram username.
@@ -235,9 +246,7 @@ class Panchcofeed {
 			     
 			     $this->set_ig_user($this->ig_username);
 			     
-			    
-			     
-			     
+
 			     $this->ig_id = $this->props['ig_id'];
 		     
 		     // If neither of those are there, set the ig_id property from $this->ig_user;
@@ -249,17 +258,23 @@ class Panchcofeed {
 		        
 		     $this->props['page_id'] = $this->page_id;
 	
-		     $this->props['endpoint'] = "https://api.instagram.com/v1/users/" . $this->props['ig_id'] . "/media/recent/?client_id=" . $this->client_id . "&count=" . $this->media_count . "&max_id=" . $this->page_id;
+		     // Build out the endpoint url
+		     $endpoint = "https://api.instagram.com/v1/users/" . $this->props['ig_id'];
+		     $endpoint.= "/media/recent/?client_id=" . $this->client_id;
+		     $endpoint.= "&count=" . $this->media_count . "&max_id=" . $this->page_id;
+		     $this->props['endpoint'] = $endpoint;
 		     
 		     $this->parse_media();
 	     
 	     }
 	     
-		 $variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+	     $variables[] = $this->props;
+
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
 	     
      }
+     
+// -----------------------------------------------------------------------------
     
     /**
 	  * Instagram user object for output to template.
@@ -277,11 +292,10 @@ class Panchcofeed {
 		
 		}
     
-    	$variables[] = $this->props;
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,$variables);
+    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
 	 }
 
+// -----------------------------------------------------------------------------
         
         /**
          * Do the Instagram oAuth dance.
@@ -340,6 +354,8 @@ class Panchcofeed {
 	        } 
         }
         
+// -----------------------------------------------------------------------------
+        
         /**
          * Confirm authentication for an application.
          */
@@ -364,10 +380,8 @@ class Panchcofeed {
          }
          
          
-    //----------------------------------------------------------------------------------
-    
-    
-    
+// -----------------------------------------------------------------------------
+
     /**
      * Parse a media response object to template variables.
      * @return boolean.
@@ -411,6 +425,7 @@ class Panchcofeed {
 	     
      }
          
+ // -----------------------------------------------------------------------------
          
 	/**
 	 * Fetch parameter being passed from the current template.  
@@ -462,6 +477,7 @@ class Panchcofeed {
 
 	 }
          
+// -----------------------------------------------------------------------------
 	 
 	 /**
 	  * Set an Instagram user object to this->props.
@@ -470,8 +486,6 @@ class Panchcofeed {
 	  {
 		$obj = $this->user_find($ig_username);
 		$this->props['ig_username'] = $obj->username;
-		$this->props['ig_bio'] = $obj->bio;
-		$this->props['ig_website'] = $obj->website;
 		$this->props['ig_profile_picture'] = $obj->profile_picture;
 		$this->props['ig_full_name'] = $obj->full_name;
 		$this->props['ig_id'] = $obj->id;	
@@ -481,8 +495,9 @@ class Panchcofeed {
 		  
 	  }
          
+// -----------------------------------------------------------------------------
          
-    /**
+  /**
 	 * Add pagination object properties to this->props
 	 * @param $pagination IG Pagination object from response.
 	 * @return boolean.
@@ -533,6 +548,8 @@ class Panchcofeed {
 		 return TRUE;
 	 }
 	 
+// -----------------------------------------------------------------------------	 
+	 
 	/**
 	 * Add meta object properties to this->props
 	 * @param $meta IG meta object from response.
@@ -571,6 +588,7 @@ class Panchcofeed {
 		 
 	 }
 	 
+// -----------------------------------------------------------------------------
 	 
 	/**
 	 * Add data array properties to this->props
@@ -674,7 +692,8 @@ class Panchcofeed {
 		 
 		 return TRUE; 
 	 }
-	 
+
+// -----------------------------------------------------------------------------	 
 	 
 	/**
 	 * Add authenticated user array properties to this->props
@@ -696,6 +715,7 @@ class Panchcofeed {
 
 	 }   
 	 
+// -----------------------------------------------------------------------------
 	 
 	 /**
 	  * Find Instagram user by username.
@@ -705,7 +725,11 @@ class Panchcofeed {
 	  private function user_find($ig_username)
 	  { 
 		  
-		  $this->props['endpoint'] = "https://api.instagram.com/v1/users/search?q=" . $ig_username . "&access_token=" . $this->access_token ."&count=1";
+		   // Build out the endpoint url
+		   $endpoint = "https://api.instagram.com/v1/users/search?q=";
+		   $endpoint.= $ig_username . "&access_token=" . $this->access_token ."&count=1";
+		  
+		  $this->props['endpoint'] = $endpoint;
 		  
 		  $response = json_decode(CurlHelper::getCurl($this->props['endpoint'] ));
 		 
@@ -742,6 +766,7 @@ class Panchcofeed {
 		  return $response->data[0];; 
 	  } 
 
+// -----------------------------------------------------------------------------
     
 }
 /* End of file mod.panchcofeed.php */
