@@ -101,8 +101,15 @@ class Panchcofeed {
 				$this->parse_media();
 
     	} 
-    	  	
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+    	
+    	
+    	if($this->props['total_media'] > 0)
+    	{ 
+	    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+    	} else {
+	    	return ee()->TMPL->no_results();
+    	} 	
+    	
     
     }
  
@@ -156,9 +163,13 @@ class Panchcofeed {
 					}
 				
 				} 
-		
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
-    
+				
+				if($this->props['total_media'] > 0)
+				{ 
+	    		return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+    		} else {
+	    		return ee()->TMPL->no_results();
+    		} 
     }
     
 // -----------------------------------------------------------------------------    
@@ -188,8 +199,13 @@ class Panchcofeed {
 			$this->parse_media();
 		
 			} 
-
-			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+			
+			if($this->props['ig_user'])
+			{
+				return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+			} else {
+				return ee()->TMPL->no_results();
+			}
     
     }
     
@@ -221,8 +237,12 @@ class Panchcofeed {
 			
 			} 
 			
-			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
-    
+			if($this->props['ig_user'])
+			{
+				return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+			} else {
+				return ee()->TMPL->no_results();
+			}
     }
     
 // -----------------------------------------------------------------------------
@@ -268,11 +288,14 @@ class Panchcofeed {
 	     
 	     }
 	     
-	     $variables[] = $this->props;
-
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+    	if($this->props['user_found']==1)
+			{
+			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+			} else {
+			return ee()->TMPL->no_results();
+			}
 	     
-     }
+  	}
      
 // -----------------------------------------------------------------------------
     
@@ -291,8 +314,16 @@ class Panchcofeed {
 			$this->set_ig_user($this->ig_username);
 		
 		}
-    
-    	return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+		
+		
+		if($this->props['user_found']==1)
+		{
+			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+		} else {
+			return ee()->TMPL->no_results();
+		}
+	
+    	
 	 }
 
 // -----------------------------------------------------------------------------
@@ -419,7 +450,12 @@ class Panchcofeed {
 			$this->props['media'][] = array();
 		}
 		
-		$this->props['total_media'] = count($this->props['media']);
+		if(isset($this->props['media']))
+		{
+			$this->props['total_media'] = count($this->props['media']);
+		} else {
+			$this->props['total_media'] = 0;
+		}
 		
 		return TRUE;
 	     
@@ -750,6 +786,7 @@ class Panchcofeed {
 			 
 		  // Otherwise, return object with null values.	  
 				  $response = new stdClass();
+				  $response->data[0] = new stdClass();
 				  $response->data[0]->user_found = FALSE;
 				  $response->data[0]->username = NULL;
 				  $response->data[0]->bio = NULL;

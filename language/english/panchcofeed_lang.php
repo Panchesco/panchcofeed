@@ -1,7 +1,5 @@
 <?php if( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-
-
 $lang = array(
 
 "panchcofeed_module_name" => 'Panchco Feed Module',
