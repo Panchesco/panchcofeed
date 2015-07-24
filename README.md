@@ -12,7 +12,7 @@ Use it to display:
 * [Feeds you follow](#media_feed)
 * [Items by hashtag](#media_hashtag)
 * [Items you've liked](#media_self_liked)
-* Another user's feed 
+* [Another user's feed ](#media_user)
 * Profile information for yourself or another a user
 
 ###Tags
@@ -305,7 +305,7 @@ Media items for current page. Same as [media variable pairs](#media) in media_se
 </article>
 
 <article>
-##media_self
+##media_user
 
 Displays authenticated user's media items.
 
@@ -313,6 +313,7 @@ Displays authenticated user's media items.
 
 |Parameter	|Default	|Required?	|
 |-----------|---------|-----------|
+|```ig_username```|					| Yes				|
 |```media_count```|			1		| No				|
 |```page_id```		|					| No				|
 
