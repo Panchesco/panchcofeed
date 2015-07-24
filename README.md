@@ -99,9 +99,7 @@ Media items for current page.
 #####Example:
 ```
 {exp:panchcofeed:media_self media_count="9" page_id="{segment_3}"}
-
-	
-	<h1>Profile</h1>
+<h1>Profile</h1>
 	{ig_user}
 		<figure>
 			<img src="{profile_picture}" alt="{full_name}" />
@@ -122,7 +120,6 @@ Media items for current page.
 				<a href="{path="template-group/template}"}/{next_page_id}/">Next &raquo;</a>
 		{/if}
 		</p>
-
 {/exp:panchcofeed:media_self}
 
 
@@ -304,5 +301,76 @@ Media items for current page. Same as [media variable pairs](#media) in media_se
 		{/if}
 		</p>
 {/exp:panchcofeed:media_hashtag}
+```
+</article>
+
+<article>
+##media_self
+
+Displays authenticated user's media items.
+
+#####Parameters
+
+|Parameter	|Default	|Required?	|
+|-----------|---------|-----------|
+|```media_count```|			1		| No				|
+|```page_id```		|					| No				|
+
+#####Singe Variables
+
+|Variable|Description|
+|---|-----------|
+|```{error_message}```|API error message if any|
+|```{application}```|Name of authorized application|
+|```{endpoint}```|API endpoint URL used for current result set|
+|```{next_page}```|Alias for API next_max_tag_id property|
+|```{next_url}```|API endpoint URL for next set of results|
+|```{metacode}```|API response code|
+|```{error_type}```|API error type information|
+|```{total_media```|Total media returned in current request to API|
+
+####Variable Pairs
+
+#####ig_user
+
+Profile information for app owner
+
+|Variable|Description|
+|---|-----------|
+|```{username}```|Username|
+|```{bio}```|Bio string|
+|```{website}```|Website|
+|```{username}```|Username|
+|```{profile_picture}```|URL to user's profile picture|
+|```{full_name}```|User's full name|
+|```{id}```|User's ID|
+
+####media
+
+Media items for current page. Same as [media variable pairs](#media) in media_self.
+
+#####Example:
+```
+{exp:panchcofeed:media_user ig_username="vsco" media_count="9" page_id="{segment_3}"}
+    {ig_user}
+     <h1>{ig_username}</h1>
+        <figure>
+            <img src="{profile_picture}" alt="{full_name}" />
+            <figcaption>@{username} | {full_name}</figcaption>
+        </figure>
+    {/ig_user}
+    <h2>User Feed</h2>
+    {media}
+        <figure>
+            <a href="{link}"><img src="{low_res_url}" alt="{caption}" width="{low_res_width}" height="{low_res_height}" /></a>
+            <figcaption>{caption}</figcaption>
+        </figure>
+    {/media}
+        <p>
+        {if next_page_id}
+                <a href="{path="template-group/template}"}/{next_page_id}/">Next &raquo;</a>
+        {/if}
+        </p>
+{/exp:panchcofeed:media_user}
 ```
 </article>

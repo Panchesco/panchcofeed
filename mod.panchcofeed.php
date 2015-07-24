@@ -278,7 +278,7 @@ class Panchcofeed {
 		     $this->parse_media();
 	     
 	     }
-	     
+
     	if($this->props['user_found']==1)
 			{
 			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
