@@ -293,7 +293,7 @@ class Panchcofeed {
     /**
 	  * Instagram user object for output to template.
 	  */
-	  public function ig_user()
+	  public function user_profile()
 	 {
 		 	$data['user_found']	= FALSE;
 		 	

@@ -13,7 +13,7 @@ Use it to display:
 * [Items by hashtag](#media_hashtag)
 * [Items you've liked](#media_self_liked)
 * [Another user's feed ](#media_user)
-* [Profile information for a user](#ig_user)
+* [Profile information for a user](#user_profile)
 
 ###Tags
 
@@ -373,9 +373,8 @@ Media items for current page. Same as [media variable pairs](#media) in media_se
 ```
 </article>
 
-
 <article>
-##ig_user
+##user_profile
 
 Profile information for a user.
 
@@ -397,15 +396,14 @@ Profile information for a user.
 |```{id}```|User's ID|
 
 #####Example:
-
 ```
-{exp:panchcofeed:ig_user ig_username="vsco" media_count="9" page_id="{segment_3}"}
+{exp:panchcofeed:user_profile ig_username="vsco" media_count="9" page_id="{segment_3}"}
      <h1>{username}</h1>
         <figure>
             <img src="{profile_picture}" alt="{full_name}" />
             <figcaption>@{username} | {full_name} | {id}</figcaption>
         </figure>
-{/exp:panchcofeed:ig_user}
+{/exp:panchcofeed:user_profile}
 ```
 </article>
 
