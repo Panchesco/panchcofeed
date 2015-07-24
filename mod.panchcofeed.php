@@ -295,6 +295,8 @@ class Panchcofeed {
 	  */
 	  public function ig_user()
 	 {
+		 	$data['user_found']	= FALSE;
+		 	
 		 	$this->set_application();
 			
 			if(TRUE === $this->configured)
@@ -306,9 +308,22 @@ class Panchcofeed {
 			
 			}
 			
-			if($this->props['user_found']==1)
+
+			if( isset($this->props['ig_user'][0]) )
 			{
-				return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+
+				foreach( $this->props['ig_user'][0] as $key => $row)
+				{
+					$data[$key] = $row;
+				}
+				
+				unset($data['ig_user']);
+				
+			}
+			
+			if($data['user_found']==1)
+			{
+				return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($data));
 			} else {
 				return ee()->TMPL->no_results();
 			}

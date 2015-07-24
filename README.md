@@ -339,9 +339,6 @@ Profile information for app owner
 |Variable|Description|
 |---|-----------|
 |```{username}```|Username|
-|```{bio}```|Bio string|
-|```{website}```|Website|
-|```{username}```|Username|
 |```{profile_picture}```|URL to user's profile picture|
 |```{full_name}```|User's full name|
 |```{id}```|User's ID|
@@ -375,3 +372,43 @@ Media items for current page. Same as [media variable pairs](#media) in media_se
 {/exp:panchcofeed:media_user}
 ```
 </article>
+
+
+<article>
+##ig_user
+
+Profile information for a user.
+
+#####Parameters
+
+|Parameter	|Default	|Required?	|
+|-----------|---------|-----------|
+|```ig_username```|					| Yes				|
+|```media_count```|			1		| No				|
+|```page_id```		|					| No				|
+
+#####Singe Variables
+
+|Variable|Description|
+|---|-----------|
+|```{username}```|Username|
+|```{profile_picture}```|URL to user's profile picture|
+|```{full_name}```|User's full name|
+|```{id}```|User's ID|
+
+#####Example:
+
+```
+{exp:panchcofeed:ig_user ig_username="vsco" media_count="9" page_id="{segment_3}"}
+     <h1>{username}</h1>
+        <figure>
+            <img src="{profile_picture}" alt="{full_name}" />
+            <figcaption>@{username} | {full_name} | {id}</figcaption>
+        </figure>
+{/exp:panchcofeed:ig_user}
+```
+</article>
+
+
+
+
