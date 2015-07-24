@@ -24,10 +24,10 @@ Displays authenticated user's media items.
 
 #####Parameters
 
-|Parameter	|Default	|Required?	|
-|-----------|---------|-----------|
-|```media_count```|			1		| No				|
-|```page_id```		|					| No				|
+|Parameter	|Description|Default	|Required?	|
+|-----------|-----------|---------|-----------|
+|```media_count```|Number of requested items to return|			1		| No				|
+|```page_id```		|Alias for API max_tag_id. Starting point for set of media items to return|					| No				|
 
 #####Singe Variables
 
@@ -121,8 +121,6 @@ Media items for current page.
 		{/if}
 		</p>
 {/exp:panchcofeed:media_self}
-
-
 ```
 </article>
 <article>
@@ -133,10 +131,10 @@ Displays items from feeds authenticated user follows.
 
 #####Parameters
 
-|Parameter	|Default	|Required?	|
-|-----------|---------|-----------|
-|```media_count```|			1		| No				|
-|```page_id```		|					| No				|
+|Parameter	|Description|Default	|Required?	|
+|-----------|-----------|---------|-----------|
+|```media_count```|Number of requested items to return|			1		| No				|
+|```page_id```		|Alias for API max_tag_id. Starting point for set of media items to return|					| No				|
 
 #####Singe Variables
 
@@ -186,10 +184,10 @@ Displays authenticated user's media items.
 
 #####Parameters
 
-|Parameter	|Default	|Required?	|
-|-----------|---------|-----------|
-|```media_count```|			1		| No				|
-|```page_id```		|					| No				|
+|Parameter	|Description|Default	|Required?	|
+|-----------|-----------|---------|-----------|
+|```media_count```|Number of requested items to return|			1		| No				|
+|```page_id```		|Alias for API max_like_id. Starting point for set of media items to return|					| No				|
 
 #####Singe Variables
 
@@ -257,11 +255,11 @@ Displays media items by hashtag
 
 #####Parameters
 
-|Parameter	|Default	|Required?	|
-|-----------|---------|-----------|
-|```hashtag```|					|yes		|
-|```media_count```|			1		| No				|
-|```page_id```		|					| No				|
+|Parameter	|Description|Default	|Required?	|
+|-----------|-----------|---------|-----------|
+|```hashtag```|Tag name|					|yes		|
+|```media_count```|Number of requested items to return|			1		| No				|
+|```page_id```		|Alias for API max_tag_id. Starting point for set of media items to return|					| No				|
 
 #####Singe Variables
 
@@ -311,11 +309,11 @@ Displays another user's media items.
 
 #####Parameters
 
-|Parameter	|Default	|Required?	|
-|-----------|---------|-----------|
-|```ig_username```|					| Yes				|
-|```media_count```|			1		| No				|
-|```page_id```		|					| No				|
+|Parameter	|Description|Default	|Required?	|
+|-----------|-----------|---------|-----------|
+|```ig_username```|Username|					| Yes				|
+|```media_count```|Number of requested items to return|			1		| No				|
+|```page_id```		|Alias for API max_tag_id. Starting point for set of media items to return|					| No				|
 
 #####Singe Variables
 
@@ -380,11 +378,10 @@ Profile information for a user.
 
 #####Parameters
 
-|Parameter	|Default	|Required?	|
-|-----------|---------|-----------|
-|```ig_username```|					| Yes				|
-|```media_count```|			1		| No				|
-|```page_id```		|					| No				|
+|Parameter	|Description|Default	|Required?	|
+|-----------|-----------|---------|-----------|
+|```ig_username```|Username of requested profile|					| Yes				|
+
 
 #####Singe Variables
 
