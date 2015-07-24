@@ -155,7 +155,7 @@ Displays items from feeds authenticated user follows.
 
 #####media
 
-Media items for current page. Same as media variable pairs in media_self.
+Media items for current page. Same as media variable pairs in [media_self](#media_self).
 
 
 #####Example:
