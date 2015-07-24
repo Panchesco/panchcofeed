@@ -18,7 +18,7 @@ Use it to display:
 ###Tags
 
 <article>
-##media_self <a id="media_self"></a>
+##media_self
 
 Displays authenticated user's media items.
 
@@ -130,7 +130,7 @@ Media items for current page.
 </article>
 <article>
 
-##media_feed <a id="media_feed"></a>
+##media_feed
 
 Displays items from feeds authenticated user follows.
 
@@ -158,7 +158,7 @@ Displays items from feeds authenticated user follows.
 
 #####media
 
-Media items for current page. Same as [media variable pairs](#media_self) in media_self.
+Media items for current page. Same as [media variable pairs](#media) in media_self.
 
 
 #####Example:
@@ -225,7 +225,7 @@ Profile information for app owner
 
 ####media
 
-Media items for current page. Same as [media variable pairs](#media_self) in media_self.
+Media items for current page. Same as [media variable pairs](#media) in media_self.
 
 #####Example:
 ```
@@ -284,7 +284,7 @@ Displays media items by hashtag
 
 ####media
 
-Media items for current page. Same as [media variable pairs](#media_self) in media_self.
+Media items for current page. Same as [media variable pairs](#media) in media_self.
 
 #####Example:
 
