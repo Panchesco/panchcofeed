@@ -158,7 +158,7 @@ Displays items from feeds authenticated user follows.
 
 #####media
 
-Media items for current page. Same as media variable pairs in [media_self](#media_self).
+Media items for current page. Same as [media variable pairs](#media_self) in media_self.
 
 
 #####Example:
@@ -225,7 +225,7 @@ Profile information for app owner
 
 ####media
 
-Media items for current page. Same as media variable pairs in [media_self](#media_self).
+Media items for current page. Same as [media variable pairs](#media_self) in media_self.
 
 #####Example:
 ```
@@ -254,7 +254,7 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 ```
 </article>
 <article>
-##media_hashtag <a id="media_hashtag"></a>
+##media_hashtag
 
 Displays media items by hashtag
 
@@ -284,7 +284,7 @@ Displays media items by hashtag
 
 ####media
 
-Media items for current page. Same as media variable pairs in [media_self](#media_self).
+Media items for current page. Same as [media variable pairs](#media_self) in media_self.
 
 #####Example:
 
