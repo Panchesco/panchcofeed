@@ -307,7 +307,7 @@ Media items for current page. Same as [media variable pairs](#media) in media_se
 <article>
 ##media_user
 
-Displays authenticated user's media items.
+Displays another user's media items.
 
 #####Parameters
 
