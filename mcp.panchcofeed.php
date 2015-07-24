@@ -4,28 +4,21 @@
 
 	class Panchcofeed_mcp {
 		
-		
-		
+
 		function __construct()
 		{
-			/*ee()->cp->set_right_nav(array(
-        'add_application'  => BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'
-            .AMP.'module=panchcofeed'.AMP.'method=create'
-			));*/
-			
+
 			ee()->load->helper('panchco_curl');
 			ee()->load->model('applications_model','applications');
 			ee()->view->cp_page_title = lang('panchcofeed_module_name');
-			
 
-			
 		}
 		
 		
 		function index()
 		{
 			
-			    ee()->load->library('javascript');
+			   ee()->load->library('javascript');
 				ee()->load->library('table');
 				ee()->load->helper('form');
 				
@@ -59,20 +52,33 @@
 		}
 		
 		
+// -----------------------------------------------------------------------------
+
+
 		function create()
 		{
 				ee()->load->library('form_validation');
 				
-				$vars = array('application'=>'','username'=>'','client_id'=>'','client_secret'=>'','app_id'=>NULL,'redirect_uri'=>$this->redirect_uri()); 
+				$vars = array('application'=>'',
+											'username'=>'',
+											'client_id'=>'',
+											'client_secret'=>'',
+											'app_id'=>NULL,
+											'redirect_uri'=>$this->redirect_uri()); 
 
 				if(ee()->input->post('submit'))
 				{
 				
 					$vars = ee()->input->post(NULL,TRUE);
 
-					ee()->form_validation->set_rules('application', lang('application'), 'required');
-					ee()->form_validation->set_rules('client_id', lang('client_id'), 'required');
-					ee()->form_validation->set_rules('client_secret', lang('client_secret'), 'required');
+					ee()->form_validation
+						->set_rules('application', lang('application'), 'required');
+					
+					ee()->form_validation
+						->set_rules('client_id', lang('client_id'), 'required');
+					
+					ee()->form_validation
+						->set_rules('client_secret', lang('client_secret'), 'required');
 					
 					
 					
@@ -80,8 +86,10 @@
 					
 					if($valid == TRUE && ee()->applications->create())
 					{
-						ee()->session->set_flashdata('message_success', lang('create_success'));
-						ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
+						ee()->session
+							->set_flashdata('message_success', lang('create_success'));
+						ee()->functions
+						->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
 						
 						} else {
 						
@@ -98,6 +106,9 @@
 			
 		}
 		
+		
+// -----------------------------------------------------------------------------
+
 		
 		function modify()
 		{
@@ -140,6 +151,7 @@
 		}
 		
 		
+// -----------------------------------------------------------------------------
 		
 		/**
 		 * Query the actions table and create a redirect_uri value for user to give to Instagram.
@@ -185,7 +197,9 @@
 				  return ee()->load->view('delete_confirm',$vars,TRUE);
 			  }
 		  }
+		  
 		 
+// -----------------------------------------------------------------------------
 		 
 		 /** 
 		  * Handle request to delete applications.
@@ -204,6 +218,9 @@
 			  
 		  }
 		  
+		  
+// -----------------------------------------------------------------------------
+		  
 		  /**
 		   * Cancel an action and redirect to the landing page for this module.
 		   */
@@ -213,10 +230,12 @@
 			  ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=panchcofeed');
 		   }
 
+// -----------------------------------------------------------------------------
+
 			
-		}
-		/* End of file mcp.panchcofeed.php */
-		/* Location: ./system/expressionengine/third_party/panchcofeed/mcp.panchcofeed.php */
+}
+/* End of file mcp.panchcofeed.php */
+/* Location: ./system/expressionengine/third_party/panchcofeed/mcp.panchcofeed.php */
 		
 		
 		

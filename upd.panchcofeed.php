@@ -1,11 +1,9 @@
 <?php if( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 	class Panchcofeed_upd {
-		
-		
+
 		public  $version = '1.0';
-		
-		
+
 		public function install()
 		{
 			ee()->load->dbforge();
@@ -42,15 +40,27 @@
 			
 			// Module Data.
 			$fields = array(
-				'app_id'		=> array('type' => 'int', 'constraint' => '10', 'unsigned' => TRUE, 'auto_increment' => TRUE ),
-				'application'	=> array('type' => 'varchar','constraint' => '72'),
-				'client_id'		=> array('type' => 'varchar', 'constraint' => '40'),
-				'client_secret'	=> array('type' => 'varchar', 'constraint' => '40'),
-				'website_url'	=> array('type' => 'varchar', 'constraint' => '256'),
-				'redirect_uri'	=> array('type' => 'varchar', 'constraint' => '256'),
-				'grant_type'	=> array('type' => 'varchar', 'constraint' => '40','default' => 'authorization_code'),
-				'redirect_uri'	=> array('type'	=> 'varchar', 'constraint' => '256'),
-				'access_token'	=> array('type' => 'varchar', 'constraint' => '256'),
+				'app_id'		=> array('type' => 'int',
+															'constraint' => '10',
+															'unsigned' => TRUE,
+															'auto_increment' => TRUE ),
+				'application'	=> array('type' => 'varchar',
+																'constraint' => '72'),
+				'client_id'		=> array('type' => 'varchar',
+																'constraint' => '40'),
+				'client_secret'	=> array('type' => 'varchar',
+																	'constraint' => '40'),
+				'website_url'	=> array('type' => 'varchar',
+																'constraint' => '256'),
+				'redirect_uri'	=> array('type' => 'varchar',
+																	'constraint' => '256'),
+				'grant_type'	=> array('type' => 'varchar',
+																'constraint' => '40',
+																'default' => 'authorization_code'),
+				'redirect_uri'	=> array('type'	=> 'varchar',
+																	'constraint' => '256'),
+				'access_token'	=> array('type' => 'varchar',
+																	'constraint' => '256'),
 				'ig_user'		=> array('type' => 'text')	
 				
 			);
@@ -66,7 +76,7 @@
 		
 		}
 		
-		
+// -----------------------------------------------------------------------------		
 		
 		function uninstall()
 		{
@@ -93,8 +103,7 @@
 		    return TRUE;
 		}
 		
-		
-		
+// -----------------------------------------------------------------------------		
 		
 		function update($current = '')
 		{
@@ -102,6 +111,7 @@
 		}
 		
 		
+// -----------------------------------------------------------------------------
 		
 		function tabs()
 		{
@@ -117,10 +127,9 @@
 		    return $tabs;
 		}
 		
-		
+// -----------------------------------------------------------------------------		
 		
 
-		
 	}
 	/* End of file upd.panchcofeed.php */
 	/* Location: ./system/expressionengine/third_party/panchcofeed/upd_panchcofeed.php */
