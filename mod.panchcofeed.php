@@ -468,7 +468,7 @@ class Panchcofeed {
 	 	// Fetch the hasthag parameter from tthe template.
 	    if(ee()->TMPL->fetch_param('hashtag'))
 	    {
-	    	$this->props['hashtag'] = ee()->TMPL->fetch_param('hashtag');
+	    	$this->props['hashtag'] = str_replace('#','', ee()->TMPL->fetch_param('hashtag'));
 	    }
 	    
 	    // How many items? Fetch the media_count property.

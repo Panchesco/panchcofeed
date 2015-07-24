@@ -10,7 +10,7 @@ Use it to display:
 
 * [Your feed](#media_self)
 * [Feeds you follow](#media_feed)
-* Items by hashtag
+* [Items by hashtag](#media_hashtag)
 * [Items you've liked](#media_self_liked)
 * Another user's feed 
 * Profile information for yourself or another a user
@@ -161,7 +161,6 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 #####Example:
 ```
 {exp:panchcofeed:media_feed media_count="9" page_id="{segment_3}"}
-
 	<h1>Items from other users feeds</h1>
 	{media}
 		<figure>
@@ -175,9 +174,7 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 				<a href="{path="template-group/template}"}/{next_page_id}/">Next &raquo;</a>
 		{/if}
 		</p>
-
 {/exp:panchcofeed:media_feed}
-
 
 ```
 
@@ -228,9 +225,7 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 #####Example:
 ```
 {exp:panchcofeed:media_self_liked media_count="9" page_id="{segment_3}"}
-
-	
-	<h1>Profile</h1>
+<h1>Profile</h1>
 	{ig_user}
 		<figure>
 			<img src="{profile_picture}" alt="{full_name}" />
@@ -245,16 +240,59 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 			<figcaption>{caption}</figcaption>
 		</figure>
 	{/media}
+		<p>
+		{if next_page_id}
+				<a href="{path="template-group/template}"}/{next_page_id}/">Next &raquo;</a>
+		{/if}
+		</p>
+{/exp:panchcofeed:media_self_liked}
+```
+
+###media_hashtag <a id="media_hashtag"></a>
+
+Displays media items by hashtag
+
+#####Parameters
+
+|Parameter	|Default	|Required?	|
+|-----------|---------|-----------|
+|```hashtag```|					|yes		|
+|```media_count```|			1		| No				|
+|```page_id```		|					| No				|
+
+#####Singe Variables
+
+|Variable|Description|
+|---|-----------|
+|```{hashtag}```|API error message if any|
+|```{error_message}```|API error message if any|
+|```{application}```|Name of authorized application|
+|```{endpoint}```|API endpoint URL used for current result set|
+|```{next_page}```|Alias for API next_max_tag_id property|
+|```{next_url}```|API endpoint URL for next set of results|
+|```{metacode}```|API response code|
+|```{error_type}```|API error type information|
+|```{total_media```|Total media returned in current request to API|
+
+####Variable Pairs
+
+####media
+
+Media items for current page. Same as media variable pairs in [media_self](#media_self).
+
+#####Example:
+{exp:panchcofeed:media_hashtag hashtag="stanleykubrick" media_count="9" page_id="{segment_3}"}
+	<h1>{hashtag}</h1>
+	{media}
+		<figure>
+			<a href="{link}"><img src="{low_res_url}" alt="{caption}" width="{low_res_width}" height="{low_res_height}" /></a>
+			<figcaption>{caption}</figcaption>
+		</figure>
+	{/media}
 	
 		<p>
 		{if next_page_id}
 				<a href="{path="template-group/template}"}/{next_page_id}/">Next &raquo;</a>
 		{/if}
 		</p>
-
-{/exp:panchcofeed:media_self_liked}
-
-
-```
-
-
+{/exp:panchcofeed:media_hashtag}
