@@ -13,7 +13,7 @@ Use it to display:
 * [Items by hashtag](#media_hashtag)
 * [Items you've liked](#media_self_liked)
 * [Another user's feed ](#media_user)
-* Profile information for yourself or another a user
+* [Profile information for a user](#ig_user)
 
 ###Tags
 
