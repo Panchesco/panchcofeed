@@ -40,22 +40,14 @@ class Panchcofeed {
 		     	    // Get current parameter from template
 		     	    $this->get_parameters();
 
-		     	    // Get IG applcation settings from db.
-		     	    if(isset($this->props['application']))
-		     	    {
-				 		$row	= ee()->db
-		    			->where('application',$this->props['application'])
-		    			->get('panchcofeed_applications')
-		    			->row();
-	    				
-	    				} else {
+		     	   
 		    			
 		    			$row	= ee()->db
 		    			->order_by('app_id','DESC')
 		    			->get('panchcofeed_applications')
 		    			->row();
 
-	    			}
+	    		
 
 					if($row)
 					{
@@ -99,9 +91,8 @@ class Panchcofeed {
 				$this->props['endpoint']	= $endpoint;
 				
 				$this->parse_media();
-
+				
     	} 
-    	
     	
     	if($this->props['total_media'] > 0)
     	{ 
@@ -116,7 +107,7 @@ class Panchcofeed {
  // -----------------------------------------------------------------------------   
     
    /**
-    * Get feed of media items from Instagram users athenticated user follows.
+    * Get feed of media items from Instagram user's athenticated user follows.
     */
     public function media_feed()
     {
@@ -130,14 +121,14 @@ class Panchcofeed {
 					
 					$endpoint	=	"https://api.instagram.com/v1/users/self/feed?access_token=";
 					$endpoint.= $this->access_token . "&count=".$this->media_count;
-					$endpoint.= '&max_tag_id='.$this->page_id;
+					$endpoint.= '&max_id='.$this->page_id;
 					
 					$this->props['endpoint'] = $endpoint;
 		
 					$response	= CurlHelper::getCurl($this->props['endpoint']);
 			
 					$obj = json_decode($response);
-					
+
 					// Add pagination properties.
 					if(isset($obj->pagination))
 					{
@@ -199,7 +190,7 @@ class Panchcofeed {
 			$this->parse_media();
 		
 			} 
-			
+
 			if($this->props['ig_user'])
 			{
 				return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
@@ -253,7 +244,7 @@ class Panchcofeed {
      public function media_user()
      {
 	     $this->set_application();
-	     
+
 	     if(TRUE === $this->configured)
 	     {
 		     // Check for ig_id property.
@@ -265,8 +256,7 @@ class Panchcofeed {
 		     } elseif($this->ig_username)  {
 			     
 			     $this->set_ig_user($this->ig_username);
-			     
-
+			    
 			     $this->ig_id = $this->props['ig_id'];
 		     
 		     // If neither of those are there, set the ig_id property from $this->ig_user;
@@ -304,24 +294,23 @@ class Panchcofeed {
 	  */
 	  public function ig_user()
 	 {
-	 	$this->set_application();
-		
-		if(TRUE === $this->configured)
-	    {
-		
-			$this->set_application();
-		
-			$this->set_ig_user($this->ig_username);
-		
-		}
-		
-		
-		if($this->props['user_found']==1)
-		{
-			return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
-		} else {
-			return ee()->TMPL->no_results();
-		}
+		 	$this->set_application();
+			
+			if(TRUE === $this->configured)
+		    {
+			
+				$this->set_application();
+			
+				$this->set_ig_user($this->ig_username);
+			
+			}
+			
+			if($this->props['user_found']==1)
+			{
+				return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
+			} else {
+				return ee()->TMPL->no_results();
+			}
 	
     	
 	 }
@@ -456,7 +445,7 @@ class Panchcofeed {
 		} else {
 			$this->props['total_media'] = 0;
 		}
-		
+
 		return TRUE;
 	     
      }
@@ -520,15 +509,14 @@ class Panchcofeed {
 	  */
 	  private function set_ig_user($ig_username)
 	  {
-		$obj = $this->user_find($ig_username);
-		$this->props['ig_username'] = $obj->username;
-		$this->props['ig_profile_picture'] = $obj->profile_picture;
-		$this->props['ig_full_name'] = $obj->full_name;
-		$this->props['ig_id'] = $obj->id;	
-		$this->props['user_found'] = $obj->user_found; 
-		
-		return TRUE; 
-		  
+			$obj = $this->user_find($ig_username);
+			$this->props['ig_username'] = $obj->username;
+			$this->props['ig_profile_picture'] = $obj->profile_picture;
+			$this->props['ig_full_name'] = $obj->full_name;
+			$this->props['ig_id'] = $obj->id;	
+			$this->props['user_found'] = $obj->user_found; 
+			
+			return TRUE; 
 	  }
          
 // -----------------------------------------------------------------------------
@@ -540,47 +528,43 @@ class Panchcofeed {
 	 */
 	 private function add_pagination_properties($pagination)
 	 {
-		 
-		 if(isset($pagination->next_max_tag_id))
-		 {
-		 	$this->props['next_max_tag_id']	= $pagination->next_max_tag_id;
-		 	$this->props['next_page']		= $pagination->next_max_tag_id;
-		 
-		 } elseif(isset($pagination->next_max_id)) {
-			 
-			$this->props['next_max_tag_id']	= $pagination->next_max_id;
-		 	$this->props['next_page']		= $pagination->next_max_id;
-			 
-		 } elseif(isset($pagination->next_max_like_id)) {
-			 
-			 $this->props['next_max_like_id']	= $pagination->next_max_like_id;
-			 $this->props['next_page']			= $pagination->next_max_like_id;
-			 
-		 } else {
-		 
-			 $this->props['next_max_tag_id'] = NULL;
-			 $this->props['next_page']		= NULL;
-			 
-		 }
-		 
-		 if(isset($pagination->min_tag_id))
-		 {
-		 	$this->props['min_tag_id'] = $pagination->min_tag_id;
-		 
-		 } else {
-		 
-			 $this->props['min_tag_id'] = NULL;
-		 }
-		 
-		 if(isset($pagination->next_url))
-		 {
-		 	$this->props['next_url'] = $pagination->next_url;
-		 
-		 } else {
-		 
-			 $this->props['next_url'] = NULL;
-		 }
-		 
+
+	 	// Set null next_max_tag_id prop if one isn't returned.
+			if( ! $pagination->next_max_tag_id)
+			{
+				if($pagination->next_max_id)
+				{
+					$pagination->next_max_tag_id = $pagination->next_max_id;
+				} else {
+					$pagination->next_max_tag_id = NULL;
+				}
+			}
+
+			// Set null next_url prop to null if one isn't returned.
+			if( ! $pagination->next_url)
+			{
+				$pagination->next_url = NULL;
+			}
+			
+			if( $pagination->next_max_tag_id )
+			{
+				$pagination->next_page_id	= $pagination->next_max_tag_id;
+				
+				} elseif( $pagination->next_max_like_id ) {
+					
+					$pagination->next_page_id	= $pagination->next_max_like_id;
+					
+				} else {
+					
+					$pagination->next_page_id	= NULL;
+				}
+				
+
+			foreach(  $pagination as $key=>$row)
+			{
+				$this->props[$key] = $row;
+			}
+			
 		 return TRUE;
 	 }
 	 
@@ -624,7 +608,7 @@ class Panchcofeed {
 		 
 	 }
 	 
-// -----------------------------------------------------------------------------
+
 	 
 	/**
 	 * Add data array properties to this->props
