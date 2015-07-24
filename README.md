@@ -17,7 +17,8 @@ Use it to display:
 
 ###Tags
 
-###media_self <a id="media_self"></a>
+<article>
+##media_self <a id="media_self"></a>
 
 Displays authenticated user's media items.
 
@@ -126,8 +127,10 @@ Media items for current page.
 
 
 ```
+</article>
+<article>
 
-###media_feed <a id="media_feed"></a>
+##media_feed <a id="media_feed"></a>
 
 Displays items from feeds authenticated user follows.
 
@@ -177,8 +180,10 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 {/exp:panchcofeed:media_feed}
 
 ```
+</article>
+<article>
 
-###media_self_liked <a id="media_self_liked"></a>
+##media_self_liked <a id="media_self_liked"></a>
 
 Displays authenticated user's media items.
 
@@ -247,8 +252,9 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 		</p>
 {/exp:panchcofeed:media_self_liked}
 ```
-
-###media_hashtag <a id="media_hashtag"></a>
+</article>
+<article>
+##media_hashtag <a id="media_hashtag"></a>
 
 Displays media items by hashtag
 
@@ -281,6 +287,8 @@ Displays media items by hashtag
 Media items for current page. Same as media variable pairs in [media_self](#media_self).
 
 #####Example:
+
+```
 {exp:panchcofeed:media_hashtag hashtag="stanleykubrick" media_count="9" page_id="{segment_3}"}
 	<h1>{hashtag}</h1>
 	{media}
@@ -296,3 +304,5 @@ Media items for current page. Same as media variable pairs in [media_self](#medi
 		{/if}
 		</p>
 {/exp:panchcofeed:media_hashtag}
+```
+</article>
