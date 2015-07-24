@@ -155,6 +155,11 @@ class Panchcofeed {
 				
 				} 
 				
+				print_r('<pre>');
+				print_r($this->props);
+				print_r('</pre>');
+				
+				
 				if($this->props['total_media'] > 0)
 				{ 
 	    		return ee()->TMPL->parse_variables(ee()->TMPL->tagdata,array($this->props));
